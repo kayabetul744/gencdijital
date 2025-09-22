@@ -1,0 +1,2 @@
+# gencdijital
+yazılımda oyunlaştırma yaklaşımı
