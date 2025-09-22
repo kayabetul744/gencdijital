@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Hız Testi</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #soru {
+            font-size: 18px;
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        #kullaniciKodu {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #3498db;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            resize: none;
+            margin-bottom: 20px;
+        }
+
+        #geriSayim {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #mesaj {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: #ecf0f1;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            #soru {
+                font-size: 16px;
+            }
+
+            #kullaniciKodu {
+                height: 100px;
+                font-size: 14px;
+            }
+
+            #geriSayim, #mesaj {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kod Hız Testi</h1>
+        <div id="soru"></div>
+        <textarea id="kullaniciKodu" placeholder="Kodu buraya yazın..." onpaste="return false;" oncopy="return false;"></textarea>
+        <div id="geriSayim">Kalan Süre: 30 saniye</div>
+        <div id="mesaj"></div>
+        <button id="basla">Başla</button>
+    </div>
+
+    <script>
+        const soruElement = document.getElementById('soru');
+        const kullaniciKoduElement = document.getElementById('kullaniciKodu');
+        const geriSayimElement = document.getElementById('geriSayim');
+        const mesajElement = document.getElementById('mesaj');
+        const baslaButton = document.getElementById('basla');
+
+        const sorular = [
+            "console.log('Merhaba Dünya!');",
+            "for (let i = 0; i < 5; i++) {\n  console.log(i);\n}",
+            "const topla = (a, b) => a + b;",
+            "const sayilar = [1, 2, 3, 4, 5];\nconst kareler = sayilar.map(x => x * x);",
+            "const kullanici = {\n  ad: 'Ahmet',\n  yas: 25\n};",
+            "function faktoriyel(n) {\n  return n <= 1 ? 1 : n * faktoriyel(n - 1);\n}",
+            "const asalMi = (num) => {\n  for (let i = 2; i < num; i++)\n    if (num % i === 0) return false;\n  return num > 1;\n};",
+            "const kelimeler = ['elma', 'armut', 'kiraz'];\nconst buyukHarf = kelimeler.map(kelime => kelime.toUpperCase());",
+            "const sayilar = [10, 20, 30];\nconst toplam = sayilar.reduce((acc, curr) => acc + curr, 0);",
+            "const tarih = new Date();\nconsole.log(tarih.getFullYear());",
+            "const metin = 'JavaScript';\nconsole.log(metin.length);",
+            "const sayilar = [5, 10, 15];\nconst yeniSayilar = sayilar.filter(x => x > 10);",
+            "const kare = (x) => x * x;",
+            "const kullanici = {\n  ad: 'Mehmet',\n  yas: 30\n};\nconsole.log(kullanici.ad);",
+            "const sayilar = [1, 2, 3];\nconsole.log(sayilar.join('-'));",
+            "const metin = 'Kodlama';\nconsole.log(metin.includes('kod'));",
+            "const sayilar = [1, 2, 3, 4, 5];\nconsole.log(sayilar.slice(1, 3));",
+            "const metin = 'JavaScript';\nconsole.log(metin.substring(0, 4));",
+            "const sayilar = [10, 20, 30];\nconsole.log(sayilar.indexOf(20));",
+            "const metin = 'Merhaba';\nconsole.log(metin.replace('a', 'e'));"
+        ];
+
+        let mevcutSoruIndex = 0;
+        let geriSayim;
+        let sure = 30;
+
+        function rastgeleSoruGetir() {
+            return sorular[mevcutSoruIndex];
+        }
+
+        function geriSayimBaslat() {
+            geriSayim = setInterval(() => {
+                sure--;
+                geriSayimElement.textContent = `Kalan Süre: ${sure} saniye`;
+                if (sure <= 0) {
+                    clearInterval(geriSayim);
+                    mesajElement.textContent = "Süre doldu! Baştan başlayın.";
+                    mevcutSoruIndex = 0;
+                    sure = 30;
+                    kullaniciKoduElement.value = "";
+                    soruGoster();
+                }
+            }, 1000);
+        }
+
+        function soruGoster() {
+            soruElement.textContent = rastgeleSoruGetir();
+            kullaniciKoduElement.value = "";
+            kullaniciKoduElement.focus();
+        }
+
+        function kontrolEt() {
+            const dogruCevap = sorular[mevcutSoruIndex];
+            const kullaniciCevap = kullaniciKoduElement.value.trim();
+
+            if (kullaniciCevap === dogruCevap) {
+                mevcutSoruIndex++;
+                if (mevcutSoruIndex === 10) {
+                    mesajElement.textContent = "Vay canına! İlk 10 soruyu tamamladın!";
+                } else if (mevcutSoruIndex === 15) {
+                    mesajElement.textContent = "Harika! 15 soruyu tamamladın!";
+                } else if (mevcutSoruIndex === sorular.length) {
+                    mesajElement.textContent = "Sen bir kod ustasısın! Tüm soruları tamamladın!";
+                    clearInterval(geriSayim);
+                    return;
+                }
+                sure = 30;
+                soruGoster();
+            } else {
+                mesajElement.textContent = "Yanlış cevap! Baştan başlayın.";
+                mevcutSoruIndex = 0;
+                sure = 30;
+                soruGoster();
+            }
+        }
+
+        baslaButton.addEventListener('click', () => {
+            baslaButton.disabled = true;
+            soruGoster();
+            geriSayimBaslat();
+        });
+
+        kullaniciKoduElement.addEventListener('input', () => {
+            if (kullaniciKoduElement.value.trim() === sorular[mevcutSoruIndex]) {
+                kontrolEt();
+            }
+        });
+
+        // Copy-paste engelleme
+        kullaniciKoduElement.onpaste = (e) => e.preventDefault();
+        kullaniciKoduElement.oncopy = (e) => e.preventDefault();
+    </script>
+</body>
+</html>

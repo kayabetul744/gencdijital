@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber IQ Testi - GNÇSiber</title>
+    
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #8A2BE2; /* BlueViolet */
+            --primary-dark: #6A0DAD; /* Purple */
+            --secondary: #FF3CAC; /* Pink */
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF; /* Cyan */
+            --accent-dark: #00E5E5;
+            --dark: #0F0524; /* Very dark purple */
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --bg-gradient: linear-gradient(135deg, #240047 0%, #410063 100%);
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 20px 20px, 20px 20px, 30px 30px, 45px 45px;
+            background-position: 0 0, 0 0, 0 0, 15px 15px;
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: 600;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px var(--highlight), 0 0 10px var(--highlight), 0 0 15px var(--highlight);
+            color: #fff;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(15, 5, 36, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 0 20px var(--glow-color);
+            backdrop-filter: blur(10px);
+        }
+        
+        .test-title {
+            font-size: 3rem;
+            background: linear-gradient(to right, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: textGlow 3s infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(138, 43, 226, 0.3); }
+            100% { text-shadow: 0 0 20px rgba(138, 43, 226, 0.7), 0 0 35px rgba(138, 43, 226, 0.5); }
+        }
+        
+        .test-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-family: 'Quantico', sans-serif;
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+            background: rgba(15, 5, 36, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+        
+        .progress-bar-custom {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            height: 15px;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .question-card {
+            background: rgba(15, 5, 36, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 0 20px var(--glow-color);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-number {
+            color: var(--accent);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .answer-option {
+            background: rgba(15, 5, 36, 0.5);
+            border: 2px solid rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+        }
+        
+        .answer-option:hover {
+            border-color: var(--primary);
+            background: rgba(138, 43, 226, 0.2);
+            transform: translateX(10px);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .answer-option.selected {
+            border-color: var(--accent);
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(15px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .answer-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: var(--accent);
+        }
+        
+        .control-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .btn-cyber {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-family: 'Quantico', sans-serif;
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .btn-cyber:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px var(--glow-color);
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
+        }
+        
+        .btn-cyber:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-container {
+            text-align: center;
+            background: rgba(15, 5, 36, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 0 30px var(--glow-color);
+            backdrop-filter: blur(15px);
+            animation: zoomIn 0.8s ease;
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .result-score {
+            font-size: 4rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            margin: 20px 0;
+            text-shadow: 0 0 20px var(--accent);
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .result-description {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .chart-container {
+            max-width: 400px;
+            margin: 30px auto;
+            position: relative;
+        }
+        
+        .back-button {
+            margin-top: 30px;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+            border: none;
+            color: var(--dark);
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-family: 'Quantico', sans-serif;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.7);
+            background: linear-gradient(45deg, var(--accent-dark), var(--primary-dark));
+        }
+        
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 5, 36, 0.9);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            box-shadow: 0 0 15px var(--glow-color);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        
+        .timer.warning {
+            border-color: var(--warning);
+            color: var(--warning);
+            animation: pulse 1s infinite;
+        }
+        
+        .timer.danger {
+            border-color: var(--danger);
+            color: var(--danger);
+            animation: pulse 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 20px 15px;
+            }
+            
+            .test-title {
+                font-size: 2rem;
+            }
+            
+            .question-card {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+            }
+            
+            .timer {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px auto;
+                width: fit-content;
+            }
+            
+            .result-score {
+                font-size: 3rem;
+            }
+            
+            .result-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer" id="timer">
+        <i class="fas fa-clock"></i> 15:00
+    </div>
+
+    <div class="test-container">
+        <!-- Test Başlangıç Ekranı -->
+        <div id="startScreen" class="test-header">
+            <h1 class="test-title neon-text">Yazılım IQ TESTİ</h1>
+            <p class="test-subtitle">Yazılım bilgini test et! 10 soru, 15 dakika süre.</p>
+            <p class="text-muted mb-4">
+                <i class="fas fa-shield-alt"></i> Zorlu sorular seni bekliyor<br>
+                <i class="fas fa-brain"></i> IQ seviyeni ölç<br>
+                <i class="fas fa-trophy"></i> Sonuçlarını grafik ile gör
+            </p>
+            <button class="btn btn-cyber btn-lg" onclick="startTest()">
+                <i class="fas fa-play"></i> TESTİ BAŞLAT
+            </button>
+        </div>
+
+        <!-- Test Ekranı -->
+        <div id="testScreen" style="display: none;">
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>İlerleme</span>
+                    <span id="progressText">0/10</span>
+                </div>
+                <div class="progress" style="height: 15px; background: rgba(15, 5, 36, 0.5);">
+                    <div class="progress-bar-custom" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Soru Kartı -->
+            <div class="question-card" id="questionCard">
+                <div class="question-number" id="questionNumber">Soru 1/10</div>
+                <h3 class="question-text" id="questionText"></h3>
+                <div id="answerOptions"></div>
+            </div>
+
+            <!-- Kontrol Butonları -->
+            <div class="control-buttons">
+                <button class="btn btn-cyber" id="prevBtn" onclick="previousQuestion()" disabled>
+                    <i class="fas fa-arrow-left"></i> Önceki
+                </button>
+                <button class="btn btn-cyber" id="nextBtn" onclick="nextQuestion()">
+                    Sonraki <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sonuç Ekranı -->
+        <div id="resultScreen" style="display: none;">
+            <div class="result-container">
+                <h2 class="result-title">TEST TAMAMLANDI!</h2>
+                <div class="result-score" id="resultScore">0%</div>
+                <h3 id="resultLevel">Seviye</h3>
+                <p class="result-description" id="resultDescription"></p>
+                
+                <div class="chart-container">
+                    <canvas id="resultChart"></canvas>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="text-center p-3" style="background: rgba(0, 255, 255, 0.1); border-radius: 10px;">
+                            <h5 class="text-info">Doğru Cevap</h5>
+                            <span class="h3" id="correctAnswers">0</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center p-3" style="background: rgba(255, 87, 87, 0.1); border-radius: 10px;">
+                            <h5 class="text-danger">Yanlış Cevap</h5>
+                            <span class="h3" id="wrongAnswers">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn back-button" onclick="restartTest()">
+                    <i class="fas fa-redo"></i> TEKRAR DENE
+                </button>
+                
+                <button class="btn back-button ms-3" onclick="goToHomePage()">
+                    <i class="fas fa-home"></i> ANA SAYFA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Test verileri
+        const questions = [
+           
+    {
+    question: "Hangi yazılım geliştirme hatası, güvenlik açıklarına en çok yol açar?",
+    options: ["Kodlama hataları", "Tasarım eksikliği", "Yetersiz test", "Dokümantasyon eksikliği"],
+    correct: 0 // Kodlama hataları
+},
+{
+    question: "Bir geliştirici, kullanıcı girişlerini doğrulamadan veritabanına kaydediyor. Bu hangi güvenlik açığına örnektir?",
+    options: ["SQL Injection", "XSS", "CSRF", "Buffer Overflow"],
+    correct: 0 // SQL Injection
+},
+{
+    question: "Bir yazılımda kullanıcıdan gelen veriler ekrana doğrudan yazdırılıyor. Bu hangi saldırıya açık kapı bırakır?",
+    options: ["Cross-site scripting (XSS)", "SQL Injection", "Directory Traversal", "Denial of Service"],
+    correct: 0 // XSS
+},
+{
+    question: "Hangi uygulama geliştirme pratiği yazılım güvenliğini artırır?",
+    options: ["Kod incelemesi", "Yalnızca frontend geliştirme", "Rastgele değişken isimleri kullanma", "Tüm kullanıcı verilerini kaydetmek"],
+    correct: 0 // Kod incelemesi
+},
+{
+    question: "Aşağıdakilerden hangisi doğrudan bir yazılım güvenlik hatası değildir?",
+    options: ["Buffer overflow", "Race condition", "Hard coding şifre", "Kullanıcı arayüzü tasarımı hatası"],
+    correct: 3 // Kullanıcı arayüzü tasarımı hatası
+},
+{
+    question: "Bir geliştirici, şifreleri açık metin olarak saklıyor. Bu hangi güvenlik riskine örnektir?",
+    options: [
+        "Şifre sızıntısı",
+        "DoS saldırısı",
+        "Kötü API kullanımı",
+        "Yanlış sürüm kontrolü"
+    ],
+    correct: 0
+},
+{
+    question: "Bir yazılımda kullanıcı kimliği taklit edilebiliyorsa, hangi saldırı türü söz konusudur?",
+    options: ["Session hijacking", "Brute force", "XSS", "Directory Traversal"],
+    correct: 0
+},
+{
+    question: "Hangi yazılım geliştirme hatası, saldırganın uygulama mantığını taklit etmesine izin verir?",
+    options: [
+        "Yanlış yetkilendirme kontrolleri",
+        "CSS hataları",
+        "Frontend optimizasyonu eksikliği",
+        "Rastgele log kullanımı"
+    ],
+    correct: 0
+},
+{
+    question: "Aşağıdakilerden hangisi yazılım güvenliğinde yaygın bir ikna hatası veya yanlış varsayımı temsil eder?",
+    options: ["Varsayılan şifreler kullanmak", "Doğru değişken isimleri kullanmak", "Fonksiyonları modüler yapmak", "Loglama yapmak"],
+    correct: 0 // Varsayılan şifreler kullanmak
+},
+{
+    question: "Geliştirici, kullanıcıya kritik bir işlem yapmadan önce onay penceresi gösteriyor. Bu hangi iyi uygulamaya örnektir?",
+    options: ["Kullanıcı doğrulama", "Rastgele hata üretme", "Veri sıkıştırma", "Frontend optimizasyonu"],
+    correct: 0 // Kullanıcı doğrulama
+}
+
+
+
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let timeLeft = 900; // 15 dakika
+        let timerInterval;
+        let testStarted = false;
+
+        function startTest() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('testScreen').style.display = 'block';
+            testStarted = true;
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timerElement = document.getElementById('timer');
+            
+            timerElement.innerHTML = `<i class="fas fa-clock"></i> ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 60) {
+                timerElement.classList.add('danger');
+            } else if (timeLeft <= 300) {
+                timerElement.classList.add('warning');
+            }
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Soru ${currentQuestion + 1}/10`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('answerOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'answer-option';
+                optionDiv.innerHTML = `
+                    <input type="radio" name="answer" value="${index}" id="option${index}">
+                    <label for="option${index}">${option}</label>
+                `;
+                
+                optionDiv.addEventListener('click', () => selectAnswer(index, optionDiv));
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Önceki cevabı işaretle
+            if (userAnswers[currentQuestion] !== undefined) {
+                selectAnswer(userAnswers[currentQuestion], optionsContainer.children[userAnswers[currentQuestion]]);
+            }
+            
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectAnswer(index, optionElement) {
+            // Önceki seçimi temizle
+            document.querySelectorAll('.answer-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Yeni seçimi işaretle
+            optionElement.classList.add('selected');
+            document.getElementById(`option${index}`).checked = true;
+            userAnswers[currentQuestion] = index;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                finishTest();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentQuestion + 1}/10`;
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? 'TESTİ BİTİR' : 'Sonraki';
+            document.getElementById('nextBtn').innerHTML = currentQuestion === questions.length - 1 ? 
+                '<i class="fas fa-check"></i> TESTİ BİTİR' : 
+                'Sonraki <i class="fas fa-arrow-right"></i>';
+        }
+
+        function finishTest() {
+            clearInterval(timerInterval);
+            calculateResults();
+            document.getElementById('testScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+        }
+
+        function calculateResults() {
+            let correctCount = 0;
+            
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].correct) {
+                    correctCount++;
+                }
+            });
+            
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            const wrongCount = questions.length - correctCount;
+            
+            document.getElementById('resultScore').textContent = percentage + '%';
+            document.getElementById('correctAnswers').textContent = correctCount;
+            document.getElementById('wrongAnswers').textContent = wrongCount;
+            
+            let level, description;
+            
+            if (percentage >= 90) {
+                level = 'SİBER GÜVENLİK UZMANI';
+                description = 'Tebrikler! Siber güvenlik konusunda uzman seviyesindesiniz. Çok başarılı bir performans sergiledişniz.';
+            } else if (percentage >= 70) {
+                level = 'İLERİ SEVİYE';
+                description = 'Çok iyi! Siber güvenlik konusunda ileri seviyede bilgiye sahipsiniz. Birkaç konuyu tekrar gözden geçirebilirsiniz.';
+            } else if (percentage >= 50) {
+                level = 'ORTA SEVİYE';
+                description = 'İyi bir başlangıç! Siber güvenlik temelleriniz var, ancak daha fazla çalışma ile bilginizi artırabilirsiniz.';
+            } else {
+                level = 'BAŞLANGIÇ SEVİYESİ';
+                description = 'Siber güvenlik yolculuğunuzun başındasınız. Daha fazla öğrenme ile hızla ilerleyebilirsiniz!';
+            }
+            
+            document.getElementById('resultLevel').textContent = level;
+            document.getElementById('resultDescription').textContent = description;
+            
+            createChart(correctCount, wrongCount);
+        }
+
+        function createChart(correct, wrong) {
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Doğru', 'Yanlış'],
+                    datasets: [{
+                        data: [correct, wrong],
+                        backgroundColor: ['#00FFFF', '#FF5757'],
+                        borderColor: ['#00E5E5', '#FF3030'],
+                        borderWidth: 3,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#f5f5ff',
+                                font: {
+                                    family: 'Rajdhani',
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                padding: 20
+                            }
+                        }
+                    },
+                    elements: {
+                        arc: {
+                            borderRadius: 5
+                        }
+                    }
+                }
+            });
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            userAnswers = [];
+            timeLeft = 900;
+            testStarted = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('timer').className = 'timer';
+            document.getElementById('timer').innerHTML = '<i class="fas fa-clock"></i> 15:00';
+        }
+
+        function goToHomePage() {
+            window.location.href = 'index.html';
+        }
+
+        // Sayfa yenilenme uyarısı
+        window.addEventListener('beforeunload', function (e) {
+            if (testStarted && document.getElementById('resultScreen').style.display === 'none') {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Klavye kısayolları
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('testScreen').style.display !== 'none') {
+                if (e.key === 'ArrowLeft' && !document.getElementById('prevBtn').disabled) {
+                    previousQuestion();
+                } else if (e.key === 'ArrowRight') {
+                    nextQuestion();
+                } else if (e.key >= '1' && e.key <= '4') {
+                    const index = parseInt(e.key) - 1;
+                    const option = document.getElementById(`option${index}`);
+                    if (option) {
+                        selectAnswer(index, option.closest('.answer-option'));
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

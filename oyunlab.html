@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Laboratuvarı</title>
+    <style>
+        body {
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 4rem); /* Responsive font size */
+            font-weight: bold;
+            margin: 0;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #f6d365, #fda085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 8s ease infinite;
+        }
+
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Desktop için 3 sütun */
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background-color: rgba(25, 18, 46, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .game-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .game-image img {
+            transform: scale(1.05);
+        }
+
+        .game-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-info h3 {
+            margin: 0 0 1rem 0;
+            color: #fff;
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+        }
+
+        .game-info p {
+            margin: 0 0 1.5rem 0;
+            color: #e0e0e0;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            line-height: 1.5;
+        }
+
+        .play-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+            color: #1a237e;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 120px;
+            align-self: flex-start;
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Tablet için */
+        @media (max-width: 992px) {
+            .games-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Mobil için */
+        @media (max-width: 576px) {
+            .games-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .game-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Oyun Laboratuvarı</h1>
+    </div>
+
+    <div class="games-container">
+        <div class="game-card">
+            <div class="game-image">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHc4Y2Y4ZWw1azhzdXBtaWs4eXEwdzJ3YnBibHBmMnUyZWdvcDFmbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LmNwrBhejkK9EFP504/giphy.gif" alt="Kod Kartları">
+            </div>
+            <div class="game-info">
+                <div>
+                    <h3>Kod Kartları</h3>
+                    <p>Programlama kavramlarını öğrenmek için kartları doğru sıraya dizin!</p>
+                </div>
+                <a href="kartoyunu.html" target="_blank" class="play-button">Oyna</a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-image">
+                <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWpxMnQ4NXV6Ynp2ZDJzbWx0ZnZ3NWRnb25nZzFvZXFwMmJrMWVpbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PiQejEf31116URju4V/giphy.gif" alt="Kod Macerası">
+            </div>
+            <div class="game-info">
+                <div>
+                    <h3>Kod Macerası</h3>
+                    <p>Macera dolu bir yolculukta kodlama becerilerinizi test edin!</p>
+                </div>
+                <a href="hikayetabanlıkodmacerasıoyunu.html" target="_blank" class="play-button">Oyna</a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-image">
+                <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGRmZnZ3M3ZqMHQ4a2g1OWFpdjRiNm1xM3F0dGwydHByZ3Vwa2h6aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7btNa0RUYa5E7iiQ/giphy.gif" alt="Mantık Bulmacası">
+            </div>
+            <div class="game-info">
+                <div>
+                    <h3>Mantık Bulmacası</h3>
+                    <p>Mantıksal düşünme yeteneklerinizi geliştirin!</p>
+                </div>
+                <a href="mantıksalalgoritmaoyunu.html" target="_blank" class="play-button">Oyna</a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-image">
+                <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnA5MWo1MWM5OGRvNjVvbGxiYnQwdm8ydnV2Y3cwcmNxMHhibDNvZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26tn33aiTi1jkl6H6/giphy.gif" alt="Algoritma Labirenti">
+            </div>
+            <div class="game-info">
+                <div>
+                    <h3>Algoritma Labirenti</h3>
+                    <p>Labirentten çıkmak için doğru algoritmaları oluşturun!</p>
+                </div>
+                <a href="labirentoyunu.html" class="play-button">Oyna</a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-image">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmZldDJ1aTZ2ZjZ2amc4cXphYnR5b2Vwc2cyaGhrcnN6ZnFmOHFwNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qgQUggAC3Pfv687qPC/giphy.gif" alt="Debug Challenge">
+            </div>
+            <div class="game-info">
+                <div>
+                    <h3>Kod Hız Testi</h3>
+                    <p>Kod Yazma Becerinizi Test Edin!</p>
+                </div>
+                <a href="kodhıztesti.html" class="play-button">Oyna</a>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-image">
+                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2tsM2d2NjEyeWl6aTNxeWd0ZGJicXB2OWZoY3FqaXp5Y2E4MnVyaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1R1tvI9svkIWwpVYr/giphy.gif" alt="Pattern Matcher">
+            </div>
+            <div class="game-info">
+                <div>
+                    <h3>Kod Eşleştirme</h3>
+                    <p>Kod desenlerini eşleştirerek programlama mantığını öğrenin!</p>
+                </div>
+                <a href="yenikodlabirentioyunu.html" class="play-button">Oyna</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

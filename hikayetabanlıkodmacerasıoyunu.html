@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Macerası</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: #34495e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #3498db;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .story-container {
+            background-color: #2c3e50;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3498db, #2ecc71);
+        }
+
+        .story-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #bdc3c7;
+            padding: 15px;
+            background-color: #3b4a5a;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .code-area {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .code-blocks, .code-workspace {
+            flex: 1;
+            min-height: 300px;
+            background-color: #3b4a5a;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .code-block {
+            background-color: #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: move;
+            transition: all 0.3s ease;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-family: 'Consolas', monospace;
+        }
+
+        .code-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block.dragging {
+            opacity: 0.7;
+            transform: scale(1.02);
+        }
+
+        .drop-zone {
+            border: 2px dashed #7f8c8d;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 50px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .drop-zone.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+            animation: pulse-success 0.5s ease;
+        }
+
+        .drop-zone.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+            animation: shake 0.5s ease;
+        }
+
+        .drop-zone.hover {
+            background-color: rgba(41, 128, 185, 0.2);
+            border-color: #3498db;
+            transform: scale(1.02);
+        }
+
+        .progress-container {
+            height: 10px;
+            background-color: #3b4a5a;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            width: 0;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                45deg,
+                rgba(255,255,255,0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 20px 20px;
+            animation: move-stripes 1s linear infinite;
+        }
+
+        @keyframes move-stripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 0; }
+        }
+
+        .console {
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            margin-top: 20px;
+            border: 1px solid #3498db;
+            position: relative;
+        }
+
+        .console::before {
+            content: 'Konsol';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background-color: #2c3e50;
+            padding: 0 10px;
+            color: #3498db;
+            font-size: 0.9em;
+        }
+
+        .console-output {
+            color: #2ecc71;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .console-output li {
+            margin-bottom: 5px;
+        }
+
+        .console-output li::before {
+            content: '>';
+            color: #3498db;
+            margin-right: 10px;
+        }
+
+        .check-button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 35px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .check-button:active {
+            transform: translateY(1px);
+        }
+
+        @keyframes pulse-success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 768px) {
+            .code-area {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .code-block {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .story-text {
+                font-size: 1em;
+            }
+
+            .code-blocks, .code-workspace {
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kod Macerası</h1>
+        
+        <div class="story-container">
+            <div class="story-text" id="story-text"></div>
+            
+            <div class="code-area">
+                <div class="code-blocks" id="code-blocks">
+                    <!-- Sürüklenebilir kod blokları buraya gelecek -->
+                </div>
+                
+                <div class="code-workspace" id="code-workspace">
+                    <!-- Hedef kod alanları buraya gelecek -->
+                </div>
+            </div>
+
+            <div class="console">
+                <ul class="console-output" id="console-output">
+                    <!-- Konsol çıktıları buraya gelecek -->
+                </ul>
+            </div>
+
+            <button class="check-button" onclick="checkCode()">Kodu Çalıştır</button>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stories = [
+            {
+                text: "Maceraperest yazılımcı Alex'in hikayesi başlıyor! Karşısında duran gizemli kapıyı açmak için bir algoritma yazması gerekiyor. Kapının üzerindeki ekranda bir mesaj beliriyor: 'Döngüyü doğru şekilde kullan ve kapıyı aç!'",
+                codeBlocks: [
+                    { text: "for (let i = 0; i < 3; i++) {", order: 1 },
+                    { text: "    console.log('Kapı kilidini kontrol et');", order: 2 },
+                    { text: "    if (i === 2) console.log('Kapı açıldı!');", order: 3 },
+                    { text: "}", order: 4 }
+                ],
+                expectedOutput: [
+                    "Kapı kilidini kontrol et",
+                    "Kapı kilidini kontrol et",
+                    "Kapı kilidini kontrol et",
+                    "Kapı açıldı!"
+                ]
+            },
+            {
+                text: "Alex içeri girdiğinde, kendini bir labirentte buluyor. Labirentten çıkmak için koşullu ifadeleri kullanarak doğru yolu bulması gerekiyor!",
+                codeBlocks: [
+                    { text: "if (yol === 'sağ') {", order: 1 },
+                    { text: "    console.log('Doğru yoldasın!');", order: 2 },
+                    { text: "} else {", order: 3 },
+                    { text: "    console.log('Geri dön!');", order: 4 },
+                    { text: "}", order: 5 }
+                ],
+                expectedOutput: [
+                    "Doğru yoldasın!"
+                ]
+            },
+            {
+                text: "Bir sonraki odada Alex'i bir dizi bulmaca bekliyor. Dizileri kullanarak şifreyi çözmesi gerekiyor!",
+                codeBlocks: [
+                    { text: "let sifre = ['K', 'O', 'D'];", order: 1 },
+                    { text: "sifre.forEach(harf => {", order: 2 },
+                    { text: "    console.log('Şifre karakteri:', harf);", order: 3 },
+                    { text: "});", order: 4 }
+                ],
+                expectedOutput: [
+                    "Şifre karakteri: K",
+                    "Şifre karakteri: O",
+                    "Şifre karakteri: D"
+                ]
+            }
+        ];
+
+        let currentStoryIndex = 0;
+        let correctCount = 0;
+
+        function initializeStory() {
+            updateStory();
+            updateProgressBar();
+        }
+
+        function updateStory() {
+            const story = stories[currentStoryIndex];
+            document.getElementById('story-text').textContent = story.text;
+
+            const codeBlocks = document.getElementById('code-blocks');
+            codeBlocks.innerHTML = '';
+
+            const shuffledBlocks = [...story.codeBlocks].sort(() => Math.random() - 0.5);
+            shuffledBlocks.forEach(block => {
+                const codeBlock = createCodeBlock(block);
+                codeBlocks.appendChild(codeBlock);
+            });
+
+            const codeWorkspace = document.getElementById('code-workspace');
+            codeWorkspace.innerHTML = '';
+
+            for (let i = 0; i < story.codeBlocks.length; i++) {
+                const dropZone = createDropZone(i + 1);
+                codeWorkspace.appendChild(dropZone);
+            }
+
+            clearConsole();
+        }
+
+        function createCodeBlock(block) {
+            const div = document.createElement('div');
+            div.className = 'code-block';
+            div.draggable = true;
+            div.textContent = block.text;
+            div.dataset.order = block.order;
+
+            div.addEventListener('dragstart', (e) => {
+                div.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', JSON.stringify({
+                    order: block.order,
+                    text: block.text
+                }));
+            });
+
+            div.addEventListener('dragend', () => {
+                div.classList.remove('dragging');
+            });
+
+            return div;
+        }
+
+        function createDropZone(position) {
+            const div = document.createElement('div');
+            div.className = 'drop-zone';
+            div.dataset.position = position;
+
+            div.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                div.classList.add('hover');
+            });
+
+            div.addEventListener('dragleave', () => {
+                div.classList.remove('hover');
+            });
+
+            div.addEventListener('drop', (e) => {
+                e.preventDefault();
+                div.classList.remove('hover');
+
+                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                const draggedOrder = parseInt(data.order);
+                const targetPosition = parseInt(div.dataset.position);
+
+                if (div.children.length === 0) {
+                    const draggedElement = document.querySelector('.dragging');
+                    div.appendChild(draggedElement);
+                }
+            });
+
+            return div;
+        }
+
+        function checkCode() {
+            const story = stories[currentStoryIndex];
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let isCorrect = true;
+            let correctBlocks = 0;
+
+            dropZones.forEach((zone, index) => {
+                if (zone.children.length === 1) {
+                    const block = zone.children[0];
+                    const blockOrder = parseInt(block.dataset.order);
+                    const expectedOrder = index + 1;
+
+                    if (blockOrder === expectedOrder) {
+                        zone.classList.add('correct');
+                        correctBlocks++;
+                    } else {
+                        zone.classList.add('incorrect');
+                        isCorrect = false;
+                        setTimeout(() => {
+                            zone.classList.remove('incorrect');
+                            document.getElementById('code-blocks').appendChild(block);
+                        }, 1000);
+                    }
+                } else {
+                    isCorrect = false;
+                }
+            });
+
+            if (isCorrect) {
+                correctCount++;
+                updateProgressBar();
+                outputToConsole(story.expectedOutput);
+
+                setTimeout(() => {
+                    if (currentStoryIndex < stories.length - 1) {
+                        currentStoryIndex++;
+                        updateStory();
+                    } else {
+                        showCompletion();
+                    }
+                }, 2000);
+            }
+        }
+
+        function outputToConsole(outputs) {
+            const consoleOutput = document.getElementById('console-output');
+            consoleOutput.innerHTML = '';
+            outputs.forEach(output => {
+                const li = document.createElement('li');
+                li.textContent = output;
+                consoleOutput.appendChild(li);
+            });
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = '';
+        }
+
+        function updateProgressBar() {
+            const progress = (correctCount / stories.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function showCompletion() {
+            const container = document.querySelector('.story-container');
+            container.innerHTML = `
+                <div class="story-text">
+                    <h2 style="text-align: center; color: #2ecc71;">
+                        Tebrikler! Tüm görevleri tamamladın!
+                    </h2>
+                    <p style="text-align: center; color: #bdc3c7;">
+                        Sen gerçek bir kod ustasısın! ${correctCount} görevi başarıyla tamamladın.
+                    </p>
+                    <button onclick="location.reload()" class="check-button">
+                        Yeniden Başla
+                    </button>
+                </div>
+            `;
+        }
+
+        // Hikayeyi başlat
+        initializeStory();
+    </script>
+</body>
+</html>

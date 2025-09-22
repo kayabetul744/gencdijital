@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kod Editörü ile Ajanda</title>
+  <style>
+    body {
+      background: #0f0c29;
+      background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: white;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .editor-section {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #282c34;
+      color: #f0f0f0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px 20px;
+      background: linear-gradient(45deg, #00bcd4, #0097a7);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, background 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #0097a7, #00bcd4);
+    }
+    .output {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+      padding: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="editor-section">
+      <textarea id="html-code" placeholder="HTML Kodunuzu Yazın"></textarea>
+      <textarea id="css-code" placeholder="CSS Kodunuzu Yazın"></textarea>
+      <textarea id="js-code" placeholder="JavaScript Kodunuzu Yazın"></textarea>
+      <button onclick="runCode()">Çalıştır</button>
+    </div>
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    function runCode() {
+      const html = document.getElementById('html-code').value;
+      const css = "<style>" + document.getElementById('css-code').value + "</style>";
+      const jsCode = document.getElementById('js-code').value;
+      const output = document.getElementById('output');
+      
+      output.innerHTML = html + css;
+      
+      const script = document.createElement("script");
+      script.textContent = jsCode;
+      output.appendChild(script);
+    }
+
+    // Örnek HTML, CSS ve JS kodları
+    document.getElementById('html-code').value = `
+<div class="agenda">
+  <h2>Ajanda</h2>
+  <div class="agenda-header">
+    <input type="text" id="taskInput" placeholder="Yeni görev ekle...">
+    <input type="date" id="taskDate">
+    <input type="time" id="taskTime">
+    <select id="taskTag">
+      <option value="iş">İş</option>
+      <option value="okul">Okul</option>
+      <option value="kişisel">Kişisel</option>
+    </select>
+    <button onclick="addTask()">Ekle</button>
+  </div>
+  <div id="taskList" class="task-list"></div>
+</div>
+    `;
+
+    document.getElementById('css-code').value = `
+.agenda {
+  font-family: 'Poppins', sans-serif;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  color: black;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.agenda h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #00bcd4;
+  text-align: center;
+}
+.agenda-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.agenda-header input, .agenda-header select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: black;
+  font-size: 16px;
+}
+.agenda-header input::placeholder {
+  color: #666;
+}
+.agenda-header button {
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #00bcd4, #0097a7);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s, background 0.2s;
+}
+.agenda-header button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #0097a7, #00bcd4);
+}
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.task {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: black;
+}
+.task.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+.task span {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.task .task-date, .task .task-time, .task .task-tag {
+  font-size: 14px;
+  color: #00bcd4;
+}
+.task .task-tag {
+  color: #ff6699;
+}
+.task-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.task-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.task-actions button.complete-btn {
+  background: #4caf50;
+  color: white;
+}
+.task-actions button.complete-btn:hover {
+  background: #45a049;
+}
+.task-actions button.delete-btn {
+  background: #ff4d4d;
+  color: white;
+}
+.task-actions button.delete-btn:hover {
+  background: #ff1a1a;
+}
+    `;
+
+    document.getElementById('js-code').value = `
+function addTask() {
+  const taskInput = document.getElementById('taskInput');
+  const taskDate = document.getElementById('taskDate');
+  const taskTime = document.getElementById('taskTime');
+  const taskTag = document.getElementById('taskTag');
+  const taskList = document.getElementById('taskList');
+  const taskText = taskInput.value.trim();
+  const dateText = taskDate.value;
+  const timeText = taskTime.value;
+  const tagText = taskTag.value;
+
+  if (taskText !== "") {
+    const taskItem = document.createElement('div');
+    taskItem.classList.add('task');
+    taskItem.innerHTML = \`
+      <span>\${taskText}</span>
+      <span class="task-date">\${dateText || "Tarih Yok"}</span>
+      <span class="task-time">\${timeText || "Saat Yok"}</span>
+      <span class="task-tag">\${tagText}</span>
+      <div class="task-actions">
+        <button class="complete-btn" onclick="toggleComplete(this)">✓</button>
+        <button class="delete-btn" onclick="removeTask(this)">✗</button>
+      </div>
+    \`;
+    taskList.appendChild(taskItem);
+    taskInput.value = "";
+    taskDate.value = "";
+    taskTime.value = "";
+  }
+}
+
+function removeTask(button) {
+  const taskItem = button.closest('.task');
+  taskItem.remove();
+}
+
+function toggleComplete(button) {
+  const taskItem = button.closest('.task');
+  taskItem.classList.toggle('completed');
+}
+    `;
+  </script>
+</body>
+</html>

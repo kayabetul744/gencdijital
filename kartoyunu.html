@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Kartları ile Öğrenme</title>
+    <style>
+        /* Genel Stil */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #091572; /* Arka plan rengi */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Oyun Konteyneri */
+        .game-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        /* Başlık */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #f6d365, #fda085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Açıklama */
+        .description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+
+        /* Kartlar Alanı */
+        .cards-area {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Kartlar */
+        .card {
+            background-color: #3e07e1;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            background-color: #5a2be6;
+        }
+
+        /* Sıralama Alanı */
+        .sorting-area {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .sorting-slot {
+            width: 100px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px dashed #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        .sorting-slot.active {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Butonlar */
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .check-button, .retry-button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .check-button:hover, .retry-button:hover {
+            background-color: #1557b0;
+        }
+
+        .retry-button {
+            display: none; /* Başlangıçta gizli */
+        }
+
+        /* Sonuç Mesajı */
+        .result-message {
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* Animasyon */
+        @keyframes correctAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .correct {
+            animation: correctAnimation 0.5s ease;
+        }
+
+        @keyframes incorrectAnimation {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .incorrect {
+            animation: incorrectAnimation 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Kod Kartları ile Öğrenme</h1>
+        <p class="description" id="questionDescription">
+            <!-- Soru açıklaması buraya eklenecek -->
+        </p>
+        <div class="cards-area" id="cardsArea">
+            <!-- Kartlar buraya eklenecek -->
+        </div>
+        <div class="sorting-area" id="sortingArea">
+            <!-- Sıralama alanı buraya eklenecek -->
+        </div>
+        <div class="buttons">
+            <button class="check-button" id="checkButton">Kontrol Et</button>
+            <button class="retry-button" id="retryButton">Tekrar Deneyin</button>
+        </div>
+        <div class="result-message" id="resultMessage"></div>
+    </div>
+
+    <script>
+        // Sorular ve doğru sıralamalar
+        const questions = [
+            {
+                description: "Bir animasyonu başlatmak için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Döngü", "Koşul", "Bitir"],
+                correctOrder: ["Başlat", "Koşul", "Döngü", "Bitir"]
+            },
+            {
+                description: "Bir sayacı artırmak için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Artır", "Koşul", "Bitir"],
+                correctOrder: ["Başlat", "Koşul", "Artır", "Bitir"]
+            },
+            {
+                description: "Bir döngüyü sonlandırmak için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Döngü", "Sonlandır", "Bitir"],
+                correctOrder: ["Başlat", "Döngü", "Sonlandır", "Bitir"]
+            },
+            {
+                description: "Bir fonksiyonu çağırmak için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Fonksiyon", "Koşul", "Bitir"],
+                correctOrder: ["Başlat", "Koşul", "Fonksiyon", "Bitir"]
+            },
+            {
+                description: "Bir diziyi sıralamak için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Sırala", "Döngü", "Bitir"],
+                correctOrder: ["Başlat", "Döngü", "Sırala", "Bitir"]
+            },
+            {
+                description: "Bir metni ekrana yazdırmak için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Yazdır", "Koşul", "Bitir"],
+                correctOrder: ["Başlat", "Koşul", "Yazdır", "Bitir"]
+            },
+            {
+                description: "Bir koşulu kontrol etmek için kartları doğru sıraya dizin.",
+                cards: ["Başlat", "Koşul", "Döngü", "Bitir"],
+                correctOrder: ["Başlat", "Koşul", "Döngü", "Bitir"]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let draggedCard = null;
+
+        // Oyunu başlat
+        function startGame() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById("questionDescription").textContent = question.description;
+            createCards(question.cards);
+            createSortingSlots(question.correctOrder.length);
+            document.getElementById("resultMessage").textContent = "";
+            document.getElementById("retryButton").style.display = "none"; // Tekrar butonunu gizle
+        }
+
+        // Kartları oluştur
+        function createCards(cards) {
+            const cardsArea = document.getElementById("cardsArea");
+            cardsArea.innerHTML = "";
+            cards.forEach(card => {
+                const cardElement = document.createElement("div");
+                cardElement.classList.add("card");
+                cardElement.textContent = card;
+                cardElement.draggable = true;
+                cardElement.addEventListener("dragstart", dragStart);
+                cardsArea.appendChild(cardElement);
+            });
+        }
+
+        // Sıralama alanını oluştur
+        function createSortingSlots(count) {
+            const sortingArea = document.getElementById("sortingArea");
+            sortingArea.innerHTML = "";
+            for (let i = 0; i < count; i++) {
+                const slot = document.createElement("div");
+                slot.classList.add("sorting-slot");
+                slot.addEventListener("dragover", dragOver);
+                slot.addEventListener("drop", drop);
+                sortingArea.appendChild(slot);
+            }
+        }
+
+        // Drag and Drop işlemleri
+        function dragStart(event) {
+            draggedCard = event.target;
+            event.dataTransfer.setData("text/plain", event.target.textContent);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+            if (event.target.classList.contains("sorting-slot")) {
+                event.target.classList.add("active");
+            }
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            if (event.target.classList.contains("sorting-slot")) {
+                event.target.textContent = draggedCard.textContent;
+                event.target.classList.remove("active");
+                draggedCard.style.display = "none";
+            }
+        }
+
+        // Kontrol butonu
+        const checkButton = document.getElementById("checkButton");
+        checkButton.addEventListener("click", checkOrder);
+
+        // Tekrar deneyin butonu
+        const retryButton = document.getElementById("retryButton");
+        retryButton.addEventListener("click", retryQuestion);
+
+        function checkOrder() {
+            const slots = document.querySelectorAll(".sorting-slot");
+            const userOrder = Array.from(slots).map(slot => slot.textContent);
+            const correctOrder = questions[currentQuestionIndex].correctOrder;
+
+            if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
+                resultMessage.textContent = "Tebrikler! Doğru sıralama! 🎉";
+                resultMessage.classList.add("correct");
+                resultMessage.classList.remove("incorrect");
+                setTimeout(nextQuestion, 1500); // 1.5 saniye sonra yeni soruya geç
+            } else {
+                resultMessage.textContent = "Yanlış sıralama. Tekrar deneyin! 😅";
+                resultMessage.classList.add("incorrect");
+                resultMessage.classList.remove("correct");
+                retryButton.style.display = "block"; // Tekrar butonunu göster
+            }
+        }
+
+        // Yeni soruya geç
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                startGame();
+            } else {
+                resultMessage.textContent = "Tüm soruları tamamladınız! 🎉";
+                checkButton.style.display = "none";
+                retryButton.style.display = "none";
+            }
+        }
+
+        // Tekrar deneyin
+        function retryQuestion() {
+            startGame();
+        }
+
+        // Oyunu başlat
+        startGame();
+    </script>
+</body>
+</html>

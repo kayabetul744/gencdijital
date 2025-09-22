@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kod Editörü ile Saat ve Kronometre</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: white;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .editor-section {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #282c34;
+      color: #f0f0f0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    button {
+      padding: 12px 20px;
+      background: linear-gradient(45deg, #00bcd4, #0097a7);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, background 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #0097a7, #00bcd4);
+    }
+    .output {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+      padding: 20px;
+      color: #333;
+    }
+    .clock {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .stopwatch {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .stopwatch-controls {
+      display: flex;
+      gap: 10px;
+    }
+    .stopwatch-controls button {
+      font-size: 1em;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="editor-section">
+      <textarea id="html-code" placeholder="HTML Kodunuzu Yazın"></textarea>
+      <textarea id="css-code" placeholder="CSS Kodunuzu Yazın"></textarea>
+      <textarea id="js-code" placeholder="JavaScript Kodunuzu Yazın"></textarea>
+      <button onclick="runCode()">Çalıştır</button>
+    </div>
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    function runCode() {
+      const html = document.getElementById('html-code').value;
+      const css = "<style>" + document.getElementById('css-code').value + "</style>";
+      const jsCode = document.getElementById('js-code').value;
+      const output = document.getElementById('output');
+      
+      output.innerHTML = html + css;
+      
+      const script = document.createElement("script");
+      script.textContent = jsCode;
+      output.appendChild(script);
+    }
+
+    // Saat ve Kronometre Uygulaması
+    document.getElementById('html-code').value = `
+<div class="clock" id="clock">00:00:00</div>
+<div class="stopwatch" id="stopwatch">00:00:00</div>
+<div class="stopwatch-controls">
+  <button onclick="startStopwatch()">Başlat</button>
+  <button onclick="pauseStopwatch()">Durdur</button>
+  <button onclick="resetStopwatch()">Sıfırla</button>
+</div>
+    `;
+
+    document.getElementById('css-code').value = `
+.clock {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.stopwatch {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+.stopwatch-controls {
+  display: flex;
+  gap: 10px;
+}
+.stopwatch-controls button {
+  font-size: 1em;
+  padding: 10px 20px;
+}
+    `;
+
+    document.getElementById('js-code').value = `
+// Saat Fonksiyonu
+function updateClock() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('clock').textContent = \`\${hours}:\${minutes}:\${seconds}\`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// Kronometre Fonksiyonları
+let stopwatchInterval;
+let stopwatchTime = 0;
+
+function updateStopwatch() {
+  const hours = Math.floor(stopwatchTime / 3600);
+  const minutes = Math.floor((stopwatchTime % 3600) / 60);
+  const seconds = stopwatchTime % 60;
+  document.getElementById('stopwatch').textContent = \`\${String(hours).padStart(2, '0')}:\${String(minutes).padStart(2, '0')}:\${String(seconds).padStart(2, '0')}\`;
+}
+
+function startStopwatch() {
+  if (!stopwatchInterval) {
+    stopwatchInterval = setInterval(() => {
+      stopwatchTime++;
+      updateStopwatch();
+    }, 1000);
+  }
+}
+
+function pauseStopwatch() {
+  clearInterval(stopwatchInterval);
+  stopwatchInterval = null;
+}
+
+function resetStopwatch() {
+  clearInterval(stopwatchInterval);
+  stopwatchInterval = null;
+  stopwatchTime = 0;
+  updateStopwatch();
+}
+    `;
+  </script>
+</body>
+</html>

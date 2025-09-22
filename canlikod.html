@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DENEYAP LABORATUVARI</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .deneyap-section {
+            padding: 2cm 0;
+            background-color: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deneyap-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: transparent;
+            position: relative;
+            margin-bottom: 2cm;
+            flex-wrap: wrap; /* Mobil için wrap ekledim */
+            text-align: center; /* Mobil için merkeze hizalama */
+        }
+
+        .deneyap-header h1 {
+            font-size: 64px;
+            font-weight: bold;
+            margin: 0;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #f6d365, #fda085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .deneyap-header img {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+
+        .circle-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotate 20s linear infinite;
+            margin-bottom: 2cm;
+        }
+
+        .circle-container:hover {
+            animation-play-state: paused;
+        }
+
+        .link-item {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .link-item:hover {
+            transform: scale(1.1);
+        }
+
+        .link-item a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .link-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .center-gif {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobil uyumluluk için medya sorguları */
+        @media (max-width: 768px) {
+            .deneyap-header h1 {
+                font-size: 36px; /* Daha küçük başlık */
+                margin-top: 10px;
+            }
+
+            .deneyap-header img {
+                width: 60px;
+                height: 60px;
+                margin-right: 10px;
+            }
+
+            .circle-container {
+                width: 90vw; /* Görüntü alanının %90'ı */
+                height: 90vw;
+                margin-bottom: 1cm;
+            }
+
+            .link-item {
+                width: 25vw; /* Görüntü alanının %25'i */
+                height: 25vw;
+            }
+
+            .link-item a {
+                font-size: 14px;
+            }
+
+            .center-gif {
+                width: 30vw;
+                height: 30vw;
+            }
+        }
+
+        /* Daha küçük mobil cihazlar için */
+        @media (max-width: 480px) {
+            .deneyap-header h1 {
+                font-size: 28px;
+            }
+
+            .deneyap-header img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .circle-container {
+                width: 100vw;
+                height: 100vw;
+            }
+
+            .link-item {
+                width: 30vw;
+                height: 30vw;
+            }
+
+            .link-item a {
+                font-size: 12px;
+            }
+
+            .center-gif {
+                width: 40vw;
+                height: 40vw;
+            }
+
+            /* Mobilde dönen daire yerine grid layout */
+            .circle-container {
+                animation: none;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                width: 90%;
+                height: auto;
+                padding: 20px;
+            }
+
+            .link-item {
+                position: static;
+                transform: none !important;
+                width: 100%;
+                height: auto;
+                padding: 10px;
+            }
+
+            .link-item img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="deneyap-section">
+        <div class="deneyap-header">
+            <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3hhZ29rcmo0NndpcGlpdDl1b3htZ3Npbno3ejF1aHJleHY5dm5zYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/fwnGnA7lJUNtb1wZZL/giphy.gif" alt="DENEYAP GIF">
+            <h1>Canlı Kod Laboratuvarı</h1>
+        </div>
+
+        <div class="circle-container">
+            <div class="link-item" style="transform: rotate(0deg) translate(200px) rotate(0deg);">
+                <a href="habersitesi.html" target="_blank">
+                    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjhlcG0xN2wwY2dwdmxwaGc2ajYzM2sxYXlmMG1xZThnZG1hMGJoayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/LP0ZqMGRx0azpBhBgN/giphy.gif" alt="Haber Sitesi">
+                    Haber Sitesi
+                </a>
+            </div>
+            <!-- Diğer link-item'lar aynen kalacak -->
+            <div class="link-item" style="transform: rotate(60deg) translate(200px) rotate(-60deg);">
+                <a href="hesapmakinesi.html" target="_blank">
+                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHNuMDdqNG43YmZob292Z3JsODVqcGZ5cXd6MmpiYzU5eWp1bDRyaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/QBd2SskkDcLFCIBpfG/giphy.gif" alt="Hesap Makinesi">
+                    Hesap Makinesi
+                </a>
+            </div>
+            <div class="link-item" style="transform: rotate(120deg) translate(200px) rotate(-120deg);">
+                <a href="todolist.html" target="_blank">
+                    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExejdzcDB4bjc0Zno5MmNiMnpwOWNoc3RzNXY1MmR5Y3dyNjJiZ3JuaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/QrpVwPDGmJEIvHwKEc/giphy.gif" alt="To-Do List">
+                    To-Do List
+                </a>
+            </div>
+            <div class="link-item" style="transform: rotate(180deg) translate(200px) rotate(-180deg);">
+                <a href="pacman.html" target="_blank">
+                    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHRnenF5cG93NTkwMjdsdW9sc2JvdWFiNWdzdTlpNDNrMXhkNm1iYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/BX0P0AtZBIlBmKNI7T/giphy.gif" alt="Pac-Man">
+                    Pac-Man
+                </a>
+            </div>
+            <div class="link-item" style="transform: rotate(240deg) translate(200px) rotate(-240deg);">
+                <a href="ajanda.html" target="_blank">
+                    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcnpnY295dTV6eGRwOG4ybWdwNTV1Y3Ayb25hcWI1NnAzYTF6ZTFjcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/t78az4pNLo9Nve2B3n/giphy.gif" alt="Ajanda">
+                    Ajanda
+                </a>
+            </div>
+            <div class="link-item" style="transform: rotate(300deg) translate(200px) rotate(-300deg);">
+                <a href="saat.html" target="_blank">
+                    <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmFjZG1hZ2k2eGUydjd6M3ludmQ1bGJyMHBkanU4Ym12bjZmdHJoMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/PfdkkJ6eZtnriR3U6F/giphy.gif" alt="Saat ve Kronometre">
+                    Saat ve Kronometre
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

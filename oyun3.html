@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Kahraman - Karışık Harfler</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0a192f;
+            --secondary-color: #64ffda;
+            --accent-color: #ff416c;
+            --text-color: #e6f1ff;
+            --dark-accent: #172a45;
+            --glow-color: rgba(100, 255, 218, 0.5);
+            --success-color: #2ed573;
+            --warning-color: #ffbe0b;
+            --danger-color: #ff416c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .cyber-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 10px var(--glow-color);
+            color: var(--secondary-color);
+        }
+
+        .title::before {
+            content: ">";
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+            animation: blink 1s infinite;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+        }
+
+        .game-container {
+            background-color: var(--dark-accent);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .game-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+
+        .scenario-box {
+            background-color: rgba(23, 42, 69, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .level-indicator {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .level-badge {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .challenge-info {
+            margin-bottom: 1.5rem;
+        }
+
+        .challenge-title {
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-description {
+            font-size: 1.1rem;
+        }
+
+        .definition-container {
+            background-color: rgba(23, 42, 69, 0.7);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .letters-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .letter-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(10, 25, 47, 0.8);
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .letter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .letter-box.selected {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .word-display {
+            background-color: rgba(10, 25, 47, 0.5);
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 5px;
+            border: 1px dashed var(--secondary-color);
+        }
+
+        .btn-cyber {
+            background-color: transparent;
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+
+        .btn-cyber:hover, .btn-cyber:focus {
+            background-color: rgba(100, 255, 218, 0.1);
+            box-shadow: 0 0 10px var(--glow-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-cyber:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hint-box {
+            background-color: rgba(10, 25, 47, 0.7);
+            border: 1px dashed var(--secondary-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .game-controls {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .feedback-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            display: none;
+            font-size: 1.1rem;
+        }
+
+        .feedback-success {
+            background-color: rgba(46, 213, 115, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-error {
+            background-color: rgba(255, 65, 108, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .progress-cyber {
+            background-color: rgba(10, 25, 47, 0.7);
+            height: 15px;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-cyber {
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .results-container {
+            display: none;
+            background-color: var(--dark-accent);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .results-title {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .results-score {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .results-message {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(transparent 97%, var(--secondary-color) 97%, transparent 100%),
+                linear-gradient(90deg, transparent 97%, var(--secondary-color) 97%, transparent 100%);
+            background-size: 40px 40px;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .binary-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .binary {
+            position: absolute;
+            color: var(--secondary-color);
+            opacity: 0.1;
+            font-size: 0.8rem;
+        }
+
+        .certificate {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-accent) 100%);
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .certificate::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px dashed var(--secondary-color);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .certificate-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-badge {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background-color: rgba(100, 255, 218, 0.1);
+            border: 2px solid var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+        }
+
+        .back-button {
+            margin-top: 1.5rem;
+        }
+
+        .cybersecurity-tips {
+            background-color: rgba(23, 42, 69, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tip-item {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        .tip-item::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+        }
+
+        .game-level-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .score-display {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 1.1rem;
+        }
+
+        .timer-container {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            background-color: rgba(10, 25, 47, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-color);
+            opacity: 0.6;
+            font-size: 0.8rem;
+            margin-top: auto;
+        }
+
+        /* Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px var(--glow-color); }
+            50% { text-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .title {
+                font-size: 2.2rem;
+            }
+            .cyber-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            .game-container {
+                padding: 1.5rem;
+            }
+            .game-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .btn-cyber {
+                width: 100%;
+            }
+            .game-level-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .letter-box {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cyber-container {
+                padding: 1rem;
+            }
+            .title {
+                font-size: 1.5rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .game-container {
+                padding: 1rem;
+            }
+            .letter-box {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="binary-bg" id="binaryBackground"></div>
+    <div class="cyber-grid"></div>
+
+    <div class="cyber-container">
+        <header class="header">
+            <h1 class="title"> KARIŞIK HARFLER</h1>
+            <p class="subtitle"> terimleri çöz ve harfleri doğru sıraya koy</p>
+        </header>
+
+        
+
+        <div class="game-level-info">
+            <div class="level-indicator">
+                <span class="level-badge">Seviye <span id="currentLevel">1</span>/10</span>
+            </div>
+            <div class="score-display">
+                Puan: <span id="currentScore">0</span>
+            </div>
+        </div>
+
+        <div class="timer-container">
+            <div class="timer" id="timer">60</div>
+        </div>
+
+        <div class="game-container">
+            <div class="challenge-info">
+                <h3 class="challenge-title" id="challengeTitle"> Terim Bulmaca</h3>
+                <p class="challenge-description" id="challengeDescription">Aşağıdaki tanıma uygun terimin harflerini doğru sıraya dizin.</p>
+            </div>
+
+            <div class="definition-container" id="definitionContainer">
+                <p id="termDefinition">İnternet üzerinden yapılan, genellikle e-posta yoluyla kullanıcıları sahte web sitelerine yönlendirerek kişisel ve finansal bilgilerini çalmayı amaçlayan dolandırıcılık yöntemi.</p>
+            </div>
+            
+            <div class="word-display" id="wordDisplay">?????</div>
+            
+            <div class="letters-container" id="lettersContainer">
+                <!-- Harfler JavaScript ile doldurulacak -->
+            </div>
+
+            <div class="feedback-message feedback-success" id="feedbackSuccess">
+                <p>Tebrikler! Doğru terimi buldunuz.</p>
+            </div>
+
+            <div class="feedback-message feedback-error" id="feedbackError">
+                <p>Üzgünüz, doğru terimi bulamadınız.</p>
+            </div>
+
+            <div class="game-controls">
+                <button class="btn-cyber" id="hintButton">İpucu Göster</button>
+                <button class="btn-cyber" id="resetButton">Harfleri Sıfırla</button>
+                <button class="btn-cyber" id="checkButton">Cevabı Kontrol Et</button>
+                <button class="btn-cyber" id="nextLevelButton" disabled>Sonraki Terim</button>
+            </div>
+        </div>
+
+        <div class="progress-cyber">
+            <div class="progress-bar-cyber" id="progressBar" style="width: 10%"></div>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+            <p id="hintText">İpucu: Bu terimde toplam 10 harf var ve "O" harfi ile başlıyor.</p>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 class="results-title">Tebrikler! Tüm terimleri çözdünüz!</h2>
+            <div class="results-score">Puan: <span id="finalScore">0</span>/100</div>
+            <p class="results-message" id="resultsMessage">Harika bir performans gösterdiniz. Siber güvenlik terimleri konusunda artık bir uzmansınız!</p>
+            
+            <div class="certificate">
+                <div class="achievement-badge">🛡️</div>
+                <h3 class="certificate-title">Siber Kahraman Sertifikası</h3>
+                <p>Bu sertifika <span id="playerName">Siber Kahraman</span>'a siber güvenlik terimlerini çözme becerisinden dolayı verilmiştir.</p>
+                <p>Tarih: <span id="certificateDate">7 Nisan 2025</span></p>
+            </div>
+            
+            <div class="back-button">
+                <a href="index.html" class="btn-cyber">Ana Sayfaya Dön</a>
+            </div>
+        </div>
+
+        
+
+    
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let currentLevel = 1;
+        let totalScore = 0;
+        let levelPassed = false;
+        let selectedLetters = [];
+        let timerInterval = null;
+        let timeLeft = 60; // 60 saniye
+        let currentWord = "";
+        
+        // Seviye tanımlamaları
+        const levels = [
+    {
+        term: "KOD",
+        definition: "Bilgisayara ne yapması gerektiğini söyleyen komutlar bütünüdür.",
+        hint: "İpucu: Program yazarken satır satır yazdığınız şey."
+    },
+    {
+        term: "ALGORİTMA",
+        definition: "Bir problemi çözmek için izlenen adım adım işlemler bütünüdür.",
+        hint: "İpucu: Yemek tarifi gibi adımlarla ilerler."
+    },
+    {
+        term: "DÖNGÜ",
+        definition: "Belirli bir koşul sağlandıkça tekrar eden programlama yapısıdır.",
+        hint: "İpucu: Tekrar tekrar çalışan kod bloğu."
+    },
+    {
+        term: "DEĞİŞKEN",
+        definition: "Programda farklı değerler saklamak için kullanılan yapılardır.",
+        hint: "İpucu: İçine farklı şeyler koyabileceğiniz kutu gibi düşünebilirsiniz."
+    },
+    {
+        term: "FONKSİYON",
+        definition: "Belirli bir görevi yerine getiren, tekrar kullanılabilen kod parçasıdır.",
+        hint: "İpucu: Matematikteki gibi, girdi alıp çıktı üretir."
+    },
+    {
+        term: "NESNE",
+        definition: "Özellikleri (veri) ve davranışları (metotlar) olan yazılım bileşenidir.",
+        hint: "İpucu: OOP’de her şey bunun etrafında döner."
+    },
+    {
+        term: "SİNTAKS",
+        definition: "Bir programlama dilinde kodların doğru yazım kurallarıdır.",
+        hint: "İpucu: Yanlış yazarsanız derleyici hata verir."
+    },
+    {
+        term: "DERLEYİCİ",
+        definition: "Yazdığınız kodu bilgisayarın anlayacağı dile çeviren programdır.",
+        hint: "İpucu: Çevirmen gibi çalışır."
+    },
+    {
+        term: "MODÜL",
+        definition: "Programı parçalara ayırarak daha düzenli hale getiren kod dosyalarıdır.",
+        hint: "İpucu: Legolar gibi birbirine eklenir."
+    },
+    {
+        term: "VERİTABANI",
+        definition: "Bilgilerin düzenli olarak saklandığı ve yönetildiği sistemdir.",
+        hint: "İpucu: Bir kütüphane gibi verileri depolar."
+    }
+];
+
+        // DOM elements
+        const definitionContainer = document.getElementById('definitionContainer');
+        const termDefinition = document.getElementById('termDefinition');
+        const wordDisplay = document.getElementById('wordDisplay');
+        const lettersContainer = document.getElementById('lettersContainer');
+        const hintBox = document.getElementById('hintBox');
+        const hintText = document.getElementById('hintText');
+        const hintButton = document.getElementById('hintButton');
+        const resetButton = document.getElementById('resetButton');
+        const checkButton = document.getElementById('checkButton');
+        const nextLevelButton = document.getElementById('nextLevelButton');
+        const challengeTitle = document.getElementById('challengeTitle');
+        const challengeDescription = document.getElementById('challengeDescription');
+        const currentLevelDisplay = document.getElementById('currentLevel');
+        const currentScoreDisplay = document.getElementById('currentScore');
+        const progressBar = document.getElementById('progressBar');
+        const feedbackSuccess = document.getElementById('feedbackSuccess');
+        const feedbackError = document.getElementById('feedbackError');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const resultsMessage = document.getElementById('resultsMessage');
+        const playerNameDisplay = document.getElementById('playerName');
+        const certificateDateDisplay = document.getElementById('certificateDate');
+        const timerElement = document.getElementById('timer');
+
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', initGame);
+
+        function initGame() {
+            setLevel(1);
+            createBinaryBackground();
+            updateDate();
+            startTimer();
+            
+            hintButton.addEventListener('click', toggleHint);
+            resetButton.addEventListener('click', resetWord);
+            checkButton.addEventListener('click', () => checkAnswer(false));
+            nextLevelButton.addEventListener('click', goToNextLevel);
+        }
+
+        // Harfleri karıştır
+        function shuffleWord(word) {
+            let shuffled = word.split('');
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.join('');
+        }
+
+        // Arka plan oluşturma
+        function createBinaryBackground() {
+            const background = document.getElementById('binaryBackground');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const binaryCount = 50;
+
+            if (background) {
+                background.innerHTML = '';
+                for (let i = 0; i < binaryCount; i++) {
+                    const binary = document.createElement('div');
+                    binary.className = 'binary';
+                    binary.style.top = Math.random() * height + 'px';
+                    binary.style.left = Math.random() * width + 'px';
+                    binary.textContent = Math.random() > 0.5 ? '101010' : '010101';
+                    binary.style.opacity = 0.05 + Math.random() * 0.1;
+                    background.appendChild(binary);
+                }
+            }
+        }
+
+        // Zamanlayıcıyı başlat
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 60; // 60 saniye
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Süre dolduğunda, seviyeyi başarısız olarak işaretle
+                    checkAnswer(true);
+                }
+            }, 1000);
+        }
+
+        // Zamanlayıcı görüntüsünü güncelle
+        function updateTimerDisplay() {
+            timerElement.textContent = timeLeft;
+            
+            // Son 10 saniyede rengi değiştir
+            if (timeLeft <= 10) {
+                timerElement.style.color = 'var(--danger-color)';
+            } else {
+                timerElement.style.color = 'var(--secondary-color)';
+            }
+        }
+
+        // Harf seçme
+        function selectLetter(letterElement) {
+            if (letterElement.classList.contains('selected')) {
+                // Zaten seçili harfi kaldır
+                letterElement.classList.remove('selected');
+                const index = selectedLetters.indexOf(letterElement);
+                if (index > -1) {
+                    selectedLetters.splice(index, 1);
+                }
+            } else {
+                // Yeni harf seç
+                letterElement.classList.add('selected');
+                selectedLetters.push(letterElement);
+            }
+            
+            // Seçili harfleri göster
+            updateWordDisplay();
+        }
+
+        // Kelime gösterimini güncelle
+        function updateWordDisplay() {
+            let word = '';
+            for (let letterElement of selectedLetters) {
+                word += letterElement.textContent;
+            }
+            
+            if (word.length === 0) {
+                // Henüz harf seçilmemişse
+                const originalWord = levels[currentLevel - 1].term;
+                wordDisplay.textContent = '?'.repeat(originalWord.length);
+            } else {
+                wordDisplay.textContent = word;
+            }
+        }
+
+        // Seviye ayarlama
+        function setLevel(level) {
+            currentLevel = level;
+            levelPassed = false;
+            selectedLetters = [];
+            
+            // DOM elemanlarını güncelleme
+            currentLevelDisplay.textContent = level;
+            termDefinition.textContent = levels[level - 1].definition;
+            hintText.textContent = levels[level - 1].hint;
+            nextLevelButton.disabled = true;
+            hintBox.style.display = 'none';
+            feedbackSuccess.style.display = 'none';
+            feedbackError.style.display = 'none';
+            
+            // İlerleme çubuğunu güncelleme
+            progressBar.style.width = ((level / levels.length) * 100) + '%';
+            
+            // Karışık harfleri yükleme
+            currentWord = levels[level - 1].term;
+            let shuffledWord = shuffleWord(currentWord);
+            
+            // Karıştırılan kelime orijinal kelime ile aynıysa tekrar karıştır
+            while (shuffledWord === currentWord) {
+                shuffledWord = shuffleWord(currentWord);
+            }
+            
+            loadLetters(shuffledWord);
+            
+            // Kelime gösterimini güncelle
+            updateWordDisplay();
+            
+            // Zamanlayıcıyı yeniden başlat
+            startTimer();
+        }
+
+        // Harfleri yükleme
+        function loadLetters(shuffledWord) {
+            lettersContainer.innerHTML = '';
+            
+            for (let i = 0; i < shuffledWord.length; i++) {
+                const letterElement = document.createElement('div');
+                letterElement.className = 'letter-box';
+                letterElement.textContent = shuffledWord[i];
+                
+                letterElement.addEventListener('click', () => {
+                    selectLetter(letterElement);
+                });
+                
+                lettersContainer.appendChild(letterElement);
+            }
+        }
+
+        // İpucu göster/gizle
+        function toggleHint() {
+            if (hintBox.style.display === 'none' || hintBox.style.display === '') {
+                hintBox.style.display = 'block';
+                hintButton.textContent = 'İpucunu Gizle';
+            } else {
+                hintBox.style.display = 'none';
+                hintButton.textContent = 'İpucu Göster';
+            }
+        }
+
+        // Kelimeyi sıfırla
+        function resetWord() {
+            selectedLetters = [];
+            
+            // Tüm harf kutularını seçilmemiş olarak işaretle
+            const letterBoxes = document.querySelectorAll('.letter-box');
+            letterBoxes.forEach(box => {
+                box.classList.remove('selected');
+            });
+            
+            // Kelime gösterimini güncelle
+            updateWordDisplay();
+        }
+
+        // Cevabı kontrol et
+        function checkAnswer(isTimeout) {
+            // Zamanlayıcıyı durdur
+            clearInterval(timerInterval);
+            
+            if (isTimeout) {
+                // Süre doldu, seviyeyi başarısız olarak işaretle
+                feedbackError.style.display = 'block';
+                feedbackSuccess.style.display = 'none';
+                feedbackError.innerHTML = '<p>Süre doldu! Siber güvenlik terimleri konusunda daha hızlı olun.</p>';
+                
+                // Doğru kelimeyi göster
+                wordDisplay.textContent = currentWord;
+                
+                // Sonraki seviye düğmesini etkinleştir
+                nextLevelButton.disabled = false;
+                return;
+            }
+            
+            let userWord = '';
+            for (let letterElement of selectedLetters) {
+                userWord += letterElement.textContent;
+            }
+            
+            const isCorrect = userWord === currentWord;
+            
+            if (isCorrect) {
+                // Doğru cevap
+                feedbackSuccess.style.display = 'block';
+                feedbackError.style.display = 'none';
+                levelPassed = true;
+                
+                // Puanları hesapla
+                const timeBonus = Math.floor(timeLeft / 6); // Kalan süreye göre bonus puan (0-10)
+                const levelPoints = 5 + timeBonus; // Temel 5 puan + zaman bonusu
+                totalScore += levelPoints;
+                currentScoreDisplay.textContent = totalScore;
+                
+                // Başarı mesajı
+                feedbackSuccess.innerHTML = `
+                    <p>Tebrikler! Doğru terimi buldunuz: ${currentWord}</p>
+                    <p>+5 puan kazandınız. Zaman bonusu: +${timeBonus} puan</p>
+                `;
+                
+                // Sonraki seviye düğmesini etkinleştir
+                nextLevelButton.disabled = false;
+                
+                // Son seviyeyse sonuçları göster
+                if (currentLevel === levels.length) {
+                    setTimeout(showResults, 2000);
+                }
+            } else {
+                // Yanlış cevap
+                feedbackSuccess.style.display = 'none';
+                feedbackError.style.display = 'block';
+                
+                // Yanlış cevap mesajı
+                feedbackError.innerHTML = `
+                    <p>Üzgünüz, doğru terimi bulamadınız.</p>
+                    <p>Doğru cevap: ${currentWord}</p>
+                `;
+                
+                // Sonraki seviye düğmesini etkinleştir
+                nextLevelButton.disabled = false;
+            }
+        }
+
+        // Sonraki seviyeye git
+        function goToNextLevel() {
+            if (currentLevel < levels.length) {
+                setLevel(currentLevel + 1);
+            } else {
+                showResults();
+            }
+        }
+
+        // Final sonuçlarını göster
+        function showResults() {
+            document.querySelector('.game-container').style.display = 'none';
+            document.querySelector('.timer-container').style.display = 'none';
+            resultsContainer.style.display = 'block';
+            finalScoreDisplay.textContent = totalScore;
+            
+            // Oyuncu adını ayarla
+            playerNameDisplay.textContent = 'Siber Kahraman';
+            
+            // Puana göre farklı mesaj göster
+            if (totalScore >= 80) {
+                resultsMessage.textContent = 'Muhteşem! Siber güvenlik terimleri konusunda uzmanlık seviyesindesiniz. Gerçek bir siber kahramansınız!';
+            } else if (totalScore >= 50) {
+                resultsMessage.textContent = 'Çok iyi! Siber güvenlik terimleri konusunda sağlam bilgileriniz var. Biraz daha pratik ile uzman olabilirsiniz.';
+            } else {
+                resultsMessage.textContent = 'İyi iş! Temel siber güvenlik terimlerini biliyorsunuz. Daha fazla çalışmayla kendinizi geliştirebilirsiniz.';
+            }
+        }
+
+        // Sertifika tarihini güncelle
+        function updateDate() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            certificateDateDisplay.textContent = today.toLocaleDateString('tr-TR', options);
+        }
+
+        // Pencere boyutu değiştiğinde binary arkaplanı yeniden oluştur
+        window.addEventListener('resize', createBinaryBackground);
+    </script>
+</body>
+</html>

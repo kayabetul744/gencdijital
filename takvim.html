@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sosyal Mühendislik Farkındalık Takvimi - Siber Güvenlik</title>
+    <meta name="description" content="30 günlük sosyal mühendislik farkındalık takvimi. Cyberpunk tarzında günlük siber güvenlik ipuçları ve farkındalık bilgileri.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Bruno+Ace+SC:wght@400&family=Orbitron:wght@400;700;900&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #8A2BE2; /* BlueViolet */
+            --primary-dark: #6A0DAD; /* Purple */
+            --secondary: #FF3CAC; /* Pink */
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF; /* Cyan */
+            --accent-dark: #00E5E5;
+            --dark: #0F0524; /* Very dark purple */
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --bg-gradient: linear-gradient(135deg, #240047 0%, #410063 100%);
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 20px 20px, 20px 20px, 30px 30px, 45px 45px;
+            background-position: 0 0, 0 0, 0 0, 15px 15px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Bruno Ace SC', sans-serif;
+            font-weight: 600;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px var(--highlight), 0 0 10px var(--highlight), 0 0 15px var(--highlight);
+            color: #fff;
+        }
+        
+        .cyber-border {
+            position: relative;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .cyber-border:before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            border-radius: inherit;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--accent), transparent, var(--primary)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: borderAnimation 4s linear infinite;
+        }
+        
+        @keyframes borderAnimation {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 130% 0%; }
+        }
+        
+        .hero-section {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 0 40px;
+            background: linear-gradient(135deg, rgba(15, 5, 36, 0.95) 0%, rgba(65, 0, 99, 0.95) 100%);
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s infinite alternate;
+            text-align: center;
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(138, 43, 226, 0.3); }
+            100% { text-shadow: 0 0 20px rgba(138, 43, 226, 0.7), 0 0 35px rgba(138, 43, 226, 0.5); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            font-family: 'Quantico', sans-serif;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            text-align: center;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .calendar-day {
+            background: rgba(15, 5, 36, 0.8);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calendar-day:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 25px var(--glow-color);
+            border-color: var(--primary);
+        }
+        
+        .day-number {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .tip-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .tip-badge.password {
+            background-color: rgba(138, 43, 226, 0.3);
+            color: var(--accent);
+            border: 1px solid var(--primary);
+        }
+        
+        .tip-badge.phishing {
+            background-color: rgba(255, 60, 172, 0.3);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+        
+        .tip-badge.software {
+            background-color: rgba(0, 245, 155, 0.3);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .tip-badge.network {
+            background-color: rgba(61, 180, 242, 0.3);
+            color: var(--info);
+            border: 1px solid var(--info);
+        }
+        
+        .tip-badge.device {
+            background-color: rgba(255, 189, 89, 0.3);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+        
+        .tip-badge.data {
+            background-color: rgba(255, 87, 87, 0.3);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .day-content h5 {
+            font-size: 1.1rem;
+            margin: 15px 0 10px 0;
+            color: var(--text-light);
+            font-family: 'Quantico', sans-serif;
+        }
+        
+        .day-content p {
+            color: var(--text-muted);
+            margin-bottom: 0;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        
+        .cyber-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(rgba(138, 43, 226, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.05) 1px, transparent 1px);
+            background-position: -2px -2px, -2px -2px;
+            z-index: 1;
+        }
+        
+        .footer {
+            background-color: var(--darker);
+            padding: 30px 0;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            color: var(--text-muted);
+            margin: 0;
+            font-family: 'Quantico', sans-serif;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: 1fr;
+                padding: 20px 10px;
+            }
+            
+            .calendar-day {
+                padding: 15px;
+            }
+            
+            .day-number {
+                font-size: 1.5rem;
+                top: 8px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+ <!-- Hero Section -->
+<section class="hero-section">
+    <div class="cyber-grid"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="hero-title neon-text">
+                    <i class="fas fa-laptop-code"></i> 30 Günlük Yazılım Takvimi
+                </h1>
+                <p class="hero-subtitle">
+                    30 Günlük Kodlama Yolculuğu - Her Gün Bir Adım Daha İleri
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+   <!-- Calendar Grid (Yazılım Odaklı) -->
+<div class="calendar-grid">
+    <!-- Gün 1 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">01</span>
+        <span class="tip-badge software">YAZILIM</span>
+        <div class="day-content">
+            <h5><i class="fas fa-code"></i> Temel Algoritmalar</h5>
+            <p>Algoritmalar, problemleri çözmek için adım adım takip edilen yöntemlerdir. Basit örneklerle başlayın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 2 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">02</span>
+        <span class="tip-badge software">KOD</span>
+        <div class="day-content">
+            <h5><i class="fas fa-laptop-code"></i> Kod Okunabilirliği</h5>
+            <p>Yazdığınız kodu anlaşılır ve temiz tutun. Yorum satırları ekleyerek başkalarının da anlamasını kolaylaştırın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 3 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">03</span>
+        <span class="tip-badge software">HATA</span>
+        <div class="day-content">
+            <h5><i class="fas fa-bug"></i> Hata Ayıklama</h5>
+            <p>Program hatalarını çözmek için debugger araçlarını ve konsol çıktısını kullanın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 4 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">04</span>
+        <span class="tip-badge software">VERİ</span>
+        <div class="day-content">
+            <h5><i class="fas fa-database"></i> Veri Yapıları</h5>
+            <p>Liste, dizi, küme gibi veri yapıları ile bilgileri düzenleyin ve daha hızlı erişim sağlayın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 5 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">05</span>
+        <span class="tip-badge software">FRAMEWORK</span>
+        <div class="day-content">
+            <h5><i class="fas fa-cogs"></i> Framework Kullanımı</h5>
+            <p>Hazır framework’leri kullanarak geliştirme süresini kısaltın ve kodunuzu standardize edin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 6 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">06</span>
+        <span class="tip-badge software">VERSİYON KONTROLÜ</span>
+        <div class="day-content">
+            <h5><i class="fas fa-code-branch"></i> Git Kullanımı</h5>
+            <p>Proje dosyalarını yönetmek ve değişiklikleri takip etmek için Git ve GitHub kullanın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 7 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">07</span>
+        <span class="tip-badge software">TEST</span>
+        <div class="day-content">
+            <h5><i class="fas fa-vial"></i> Birim Testleri</h5>
+            <p>Yazılımın doğru çalıştığını doğrulamak için küçük parçaları ayrı test edin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 8 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">08</span>
+        <span class="tip-badge software">DEPLOY</span>
+        <div class="day-content">
+            <h5><i class="fas fa-cloud-upload-alt"></i> Uygulama Yayını</h5>
+            <p>Kodunuzu sunucuda çalıştırmadan önce test ortamında deneyin ve hataları giderin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 9 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">09</span>
+        <span class="tip-badge software">SECURITY</span>
+        <div class="day-content">
+            <h5><i class="fas fa-shield-alt"></i> Güvenli Kodlama</h5>
+            <p>SQL injection, XSS gibi açıkları önlemek için input doğrulama ve güvenli kütüphaneler kullanın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 10 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">10</span>
+        <span class="tip-badge software">PERFORMANS</span>
+        <div class="day-content">
+            <h5><i class="fas fa-tachometer-alt"></i> Kod Optimizasyonu</h5>
+            <p>Daha hızlı çalışan uygulamalar için algoritmaları ve döngüleri optimize edin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 11 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">11</span>
+        <span class="tip-badge software">DEBUG</span>
+        <div class="day-content">
+            <h5><i class="fas fa-search"></i> Loglama</h5>
+            <p>Hataları ve kullanıcı hareketlerini takip etmek için loglama yapın ve düzenli analiz edin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 12 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">12</span>
+        <span class="tip-badge software">MODÜL</span>
+        <div class="day-content">
+            <h5><i class="fas fa-puzzle-piece"></i> Modüler Kod</h5>
+            <p>Kodunuzu modüllere ayırarak bakım ve yeniden kullanımını kolaylaştırın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 13 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">13</span>
+        <span class="tip-badge software">DOCUMENTATION</span>
+        <div class="day-content">
+            <h5><i class="fas fa-book"></i> Kod Dokümantasyonu</h5>
+            <p>Fonksiyonlar, sınıflar ve modüller için açıklamalar ekleyin; başkalarının anlayabilmesini sağlayın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 14 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">14</span>
+        <span class="tip-badge software">DEPENDENCY</span>
+        <div class="day-content">
+            <h5><i class="fas fa-network-wired"></i> Bağımlılık Yönetimi</h5>
+            <p>Kütüphaneleri güncel tutun ve gereksiz bağımlılıklardan kaçının.</p>
+        </div>
+    </div>
+
+    <!-- Gün 15 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">15</span>
+        <span class="tip-badge software">BACKUP</span>
+        <div class="day-content">
+            <h5><i class="fas fa-save"></i> Kod Yedekleme</h5>
+            <p>Projelerinizi düzenli olarak yedekleyin. Bulut ve lokal kopyalar oluşturun.</p>
+        </div>
+    </div>
+
+    <!-- Gün 16 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">16</span>
+        <span class="tip-badge software">CI/CD</span>
+        <div class="day-content">
+            <h5><i class="fas fa-robot"></i> Otomatik Dağıtım</h5>
+            <p>CI/CD pipeline kurarak kod değişikliklerini hızlı ve güvenli şekilde dağıtın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 17 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">17</span>
+        <span class="tip-badge software">API</span>
+        <div class="day-content">
+            <h5><i class="fas fa-plug"></i> API Kullanımı</h5>
+            <p>Harici servislerle entegrasyon için RESTful veya GraphQL API’lerini doğru şekilde kullanın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 18 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">18</span>
+        <span class="tip-badge software">CONCURRENCY</span>
+        <div class="day-content">
+            <h5><i class="fas fa-stream"></i> Çoklu İşlem Yönetimi</h5>
+            <p>Thread ve async yapıları kullanarak uygulamanın verimliliğini artırın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 19 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">19</span>
+        <span class="tip-badge software">REFactoring</span>
+        <div class="day-content">
+            <h5><i class="fas fa-edit"></i> Kod Refactoring</h5>
+            <p>Kodun yapısını bozmadan daha okunabilir ve bakımı kolay hale getirin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 20 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">20</span>
+        <span class="tip-badge software">LOGGING</span>
+        <div class="day-content">
+            <h5><i class="fas fa-clipboard-list"></i> Uygulama Logları</h5>
+            <p>Hata ve performans loglarını analiz ederek sorunları hızlı çözün.</p>
+        </div>
+    </div>
+
+    <!-- Gün 21 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">21</span>
+        <span class="tip-badge software">VERSIONING</span>
+        <div class="day-content">
+            <h5><i class="fas fa-code-branch"></i> Sürüm Kontrolü</h5>
+            <p>Projelerde sürüm numaralandırma ve değişiklik takibi yapın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 22 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">22</span>
+        <span class="tip-badge software">UNIT TEST</span>
+        <div class="day-content">
+            <h5><i class="fas fa-vial"></i> Otomatik Testler</h5>
+            <p>Yazılımın doğru çalıştığını doğrulamak için birim testler yazın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 23 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">23</span>
+        <span class="tip-badge software">ERROR HANDLING</span>
+        <div class="day-content">
+            <h5><i class="fas fa-exclamation-triangle"></i> Hata Yönetimi</h5>
+            <p>Program hatalarını düzgün şekilde yakalayın ve kullanıcıya uygun mesaj gösterin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 24 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">24</span>
+        <span class="tip-badge software">SECURITY</span>
+        <div class="day-content">
+            <h5><i class="fas fa-lock"></i> Şifreleme</h5>
+            <p>Hassas verileri korumak için güçlü şifreleme algoritmaları kullanın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 25 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">25</span>
+        <span class="tip-badge software">PERFORMANCE</span>
+        <div class="day-content">
+            <h5><i class="fas fa-tachometer-alt"></i> Performans İzleme</h5>
+            <p>Uygulamanızın performansını ölçün ve darboğazları optimize edin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 26 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">26</span>
+        <span class="tip-badge software">MONITORING</span>
+        <div class="day-content">
+            <h5><i class="fas fa-chart-line"></i> Uygulama İzleme</h5>
+            <p>Sunucu ve uygulama sağlığını takip edin, sorunları hızlı tespit edin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 27 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">27</span>
+        <span class="tip-badge software">API TEST</span>
+        <div class="day-content">
+            <h5><i class="fas fa-network-wired"></i> API Testleri</h5>
+            <p>API uç noktalarını test ederek doğru veri alındığını doğrulayın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 28 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">28</span>
+        <span class="tip-badge software">DEBUGGING</span>
+        <div class="day-content">
+            <h5><i class="fas fa-bug"></i> Gelişmiş Hata Ayıklama</h5>
+            <p>Breakpoint ve console.log ile kodun davranışını adım adım inceleyin.</p>
+        </div>
+    </div>
+
+    <!-- Gün 29 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">29</span>
+        <span class="tip-badge software">CLEAN CODE</span>
+        <div class="day-content">
+            <h5><i class="fas fa-brush"></i> Temiz Kod Prensipleri</h5>
+            <p>Kodunuzu okunabilir, anlaşılır ve sürdürülebilir şekilde yazın.</p>
+        </div>
+    </div>
+
+    <!-- Gün 30 -->
+    <div class="calendar-day cyber-border">
+        <span class="day-number">30</span>
+        <span class="tip-badge software">LEARNING</span>
+        <div class="day-content">
+            <h5><i class="fas fa-graduation-cap"></i> Sürekli Öğrenme</h5>
+            <p>Yazılım dünyasındaki yenilikleri takip edin, yeni diller ve teknolojiler öğrenin.</p>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><i class="fas fa-shield-alt"></i> Siber güvenlik herkesin sorumluluğundadır. Bu takvimi paylaşarak farkındalığı artırın.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

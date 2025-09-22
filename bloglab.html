@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOG LABORATUVARI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: bold;
+            margin: 0;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee, #f6d365, #fda085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 8s ease infinite;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .blog-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .gif-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .gif-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .blog-card:hover .gif-container img {
+            transform: scale(1.1);
+        }
+
+        .blog-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(90deg, #ff9a9e, #a6c1ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blog-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .glow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Blog Laboratuvarı</h1>
+    </div>
+    
+    <div class="blog-grid" id="blogGrid"></div>
+
+    <script>
+        const blogPosts = [
+            { 
+                title: "Yazılım Dünyasına Giriş: İlk Adımlarınızı Atın",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWFhanFvMDdtdGd4bHoxNW5sdTF2bGtlN2VjMjY2d2xydW55cjVjOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/aGBsIgKtEtIiOifGng/giphy.gif",
+                tags: ["Başlangıç", "Kariyer", "Temeller"]
+            },
+            { 
+                title: "Frontend Nedir? Temel Kavramlar ve Teknolojiler",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXY0dHd6MnZ0ejRnaHk2YnBzZnVvNzFhNm9sZ2kzcTF2ZG91d2hlaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/78XCFBGOlS6keY1Bil/giphy.gif",
+                tags: ["Frontend", "Web", "UI/UX"]
+            },
+            { 
+                title: "Backend Nedir? Sunucu Tarafının Gücü",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGh5cno1MHAyZXcyeDZ2cGJ4bzk2dm15MWF4cDdwNTRuYmNjaHphcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Qn74oPyaKYBpVWdA7t/giphy.gif",
+                tags: ["Backend", "Sunucu", "API"]
+            },
+            { 
+                title: "Fullstack Geliştirici Kimdir? Tüm Süreci Yönetin",
+                gifLink: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z4ZzNtMWhsMnVjNHpvdTA1Y3lnNWllNnlpdzdxbGttM2F3ZDFuOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SWoSkN6DxTszqIKEqv/giphy.gif",
+                tags: ["Fullstack", "Kariyer", "Teknoloji"]
+            },
+            { 
+                title: "Mobil Uygulama Geliştirme: Android’e Giriş",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnQwOG10ZXZyeDY0ZnAzbTQzaXk0dHNiendjZDJpanF4NmJlbmdkbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/98uBZTzlXMhkk/giphy.gif",
+                tags: ["Mobil", "Android", "Kotlin"]
+            },
+            { 
+                title: "Yapay Zeka Nedir? Geleceği Şekillendiren Teknoloji",
+                gifLink: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWN6dWowYWNhYmg2aG8ycGJzeWhxYTR4cXNkbXZmZzRsZWFrcXB2aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kE6xCyOOHoxlS/giphy.gif",
+                tags: ["AI", "Makine Öğrenimi", "Gelecek"]
+            },
+            { 
+                title: "Veri Bilimi: Verilerle Geleceği Okuma Sanatı",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3VuZzNtdnNibzFoY3QwZ2s0dHNlMDVpMzd0MTBzZmJ0aTEybmI2NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FUXJBd9BdqWq9eSn9Q/giphy.gif",
+                tags: ["Veri", "Analiz", "Bilim"]
+            },
+            { 
+                title: "Oyun Geliştirme: Hayalinizdeki Dünyaları İnşa Edin",
+                gifLink: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWduMW9hMXI0end2aDdhYmd5NG92OGExNXFuaHplb2FuM2Z3OXVzaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oFyuWEqeIOVbcNgAr1/giphy.gif",
+                tags: ["Oyun", "Unity", "Tasarım"]
+            },
+            { 
+                title: "Siber Güvenlik: Dijital Dünyada Güvende Kalın",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmt2dWk5eDk0MnJyamQ1b2ZzMzR4d3J2YnFlanBxaHFlaGtyZmI3eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RDZo7znAdn2u7sAcWH/giphy.gif",
+                tags: ["Siber Güvenlik", "Dijital Güvenlik", "Koruma"]
+            },
+            { 
+                title: "Yazılımda Kariyer Planlaması: Yol Haritanızı Çizin",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21ma2VjOGxrcnp5N2dkankzcnp1bXNwd293eWZvNG1kN2xqaHJtZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/8DTjkpNEkcJeTbFkQj/giphy.gif",
+                tags: ["Kariyer", "Planlama", "Yazılım"]
+            },
+            { 
+                title: "İş Görüşmelerine Hazırlık: Başarılı Olmanın İpuçları",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWNiZTk4N25pZHU5aTEwb2QyMWo3aG0yajd1dHh5azRpbzQwNmc2YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/mU8x1lG0cap4XMfI35/giphy.gif",
+                tags: ["İş Görüşmesi", "Başarı", "Hazırlık"]
+            },
+            { 
+                title: "Portföy Oluşturma: Projelerinizle Öne Çıkın",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHp0dDh3NGRyYmNnYzU3amQ4a3BzdWtqbTA1OW00aWIwOGhvdTVzaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9JrkkDoJuU0FbdbUZU/giphy.gif",
+                tags: ["Portföy", "Projeler", "Kariyer"]
+            },
+            { 
+                title: "CV Hazırlama: Dikkat Çekici Bir Özgeçmiş Yazın",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2NjZHVzeHd3c2QwMjFva2puazE4NDN5andxd2FrMjI1NHA1bnRiayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rVZYvzv5ZjOCHFXvni/giphy.gif",
+                tags: ["CV", "Özgeçmiş", "İş"]
+            },
+            { 
+                title: "Junior’dan Senior’a Yükselme: Kariyer Basamakları",
+                gifLink: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3cyYjRuZGo1dHZvbXNjYWJxNXM5Y3AxM3BjeDljcm4wajB6a2VtYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XFpjdTjULJ4wmiw3LM/giphy.gif",
+                tags: ["Kariyer", "Yükselme", "Büyüme"]
+            },
+            { 
+                title: "Programlama Dillerine Genel Bakış: Hangisi Size Uygun?",
+                gifLink: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDkyZWpyeGx6ZmFpM2pibDRoejN3bGliampwNTkwczA3aDdpdjRmNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RbDKaczqWovIugyJmW/giphy.gif",
+                tags: ["Programlama", "Diller", "Yazılım"]
+            },
+            { 
+                title: "Git ve GitHub Kullanımı: İşbirliği ve Versiyon Kontrolü",
+                gifLink: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTEwdTZxcGxicnB5czUzY2p3djdieHB5cWJnZnlmMTZkang0YnduMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/JwDE7vdtSAHsZS9zOY/giphy.gif",
+                tags: ["Git", "GitHub", "Versiyon Kontrolü"]
+            },
+            { 
+                title: "Web Geliştirmenin Temelleri: HTML, CSS, JavaScript",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOW1rNnM3ajBjY21taTlwcnh2bXdoMG94YThnbHQwNG5uMG5nMjMwaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/zbMRZx113HKBkeCwrm/giphy.gif",
+                tags: ["Web Geliştirme", "HTML", "CSS", "JavaScript"]
+            },
+            { 
+                title: "Veri Tabanı Yönetimi: Verilerinizi Düzenleyin ve Saklayın",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTl4aW55azIwcXN6YXMwZzkwdGp2bWs4OGNhcnFueHBiYjNzNGhweCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/5E3YWzXIqhJ6Hgxboh/giphy.gif",
+                tags: ["Veri Tabanı", "Yönetim", "Veri"]
+            },
+            { 
+                title: "Algoritma ve Veri Yapıları: Problemleri Çözmenin Anahtarı",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3JxNmxzZGJhM2s0N2NnN2JnN2p6NG5pZzNhNnUybjU2bTJwNTNqdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9CfVOn3xaE5rY7uCCx/giphy.gif",
+                tags: ["Algoritma", "Veri Yapıları", "Problem Çözme"]
+            },
+            { 
+                title: "Yazılım Projelerinde Takım Çalışması: İşbirliği Kültürü",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG9mbDN1cHJqeTk2cWs0OXNzd2Z6M3QxbTNvd2YwYXJ0MWdrZGtvYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TPzzQse5ROPpnYQ/giphy.gif",
+                tags: ["Takım Çalışması", "İşbirliği", "Proje"]
+            },
+            { 
+                title: "Freelancer Olarak Çalışmak: Özgürlüğün ve Sorumluluğun Dengesi",
+                gifLink: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Mwb2FkMDN3OXZrbG1pb281ZXc3cjlhMDZ5bDJxZTc2OXJscTZvcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPnAiaMCws8nOsE/giphy.gif",
+                tags: ["Freelancer", "Çalışma", "Özgürlük"]
+            },
+            { 
+                title: "Remote Çalışmanın Avantajları ve Zorlukları",
+                gifLink: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTN4dTJtcXdlMmw0N3hycDlzc3g1YWowaWh6cGs5Z3Fwamh4czV2cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/DRx8i0O3OOW8vWShhj/giphy.gif",
+                tags: ["Remote", "Çalışma", "Avantajlar"]
+            },
+            { 
+                title: "Yazılımda Problem Çözme Becerileri: Zorlukların Üstesinden Gelin",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1Z2V4N2s1bWI3anpiZ2RiemJmZHVhd2Z2cHg4aGhucGQ4amJmeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eu4nPIRCAKsvkWHggU/giphy.gif",
+                tags: ["Problem Çözme", "Yazılım", "Beceriler"]
+            },
+            { 
+                title: "Başarılı Yazılım Geliştiricilerinin Alışkanlıkları",
+                gifLink: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExejBpMWNnZzkycWx3Njl5ZnJodjZiYTU0YmR6NWxmczk1ajZpOHF6biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/etkp773wmJugkwosZa/giphy.gif",
+                tags: ["Başarı", "Alışkanlıklar", "Geliştirici"]
+            },
+            { 
+                title: "Staj Sürecinde Başarılı Olmanın Yolları",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGRyNGV5bW41OG1raG44enF4cWs2bTFrZHkwenlsemlvNGRiMTFyZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7qE1YN7aBOFPRw8E/giphy.gif",
+                tags: ["Staj", "Başarı", "Kariyer"]
+            },
+            { 
+                title: "Yazılımda Network Oluşturma: İlişkiler Kariyerinizi Nasıl Etkiler?",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHlnbDRlcHRubWV4cTdzaTZqY24xejE0enR3MmNwcWNyeXh2ZGFsYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6gbchrcNIt4Ma8Tu/giphy.gif",
+                tags: ["Network", "Kariyer", "İlişkiler"]
+            },
+            { 
+                title: "Açık Kaynak Projelere Katılmanın Önemi ve Yolları",
+                gifLink: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXZ3cWNzbHVvZjE2MWF2YWE4MGliZ200N2FnZWQzN2gzMnQ2ZmwxdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BaRYjpHQpr46GCJihG/giphy.gif",
+                tags: ["Açık Kaynak", "Proje", "Katılım"]
+            },
+            { 
+                title: "Proje Yönetiminde Temel Yöntemler: Agile, Scrum, Kanban",
+                gifLink: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExajJyM3k1eXQya2F2ZGMwNzc3emlxNDV0eWxhMjY3aDQ5eHltZTd5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8xEA3sa0uxPuLFXaXA/giphy.gif",
+                tags: ["Proje Yönetimi", "Agile", "Scrum", "Kanban"]
+            },
+            { 
+                title: "Zaman Yönetimi: Verimliliğinizi Artırın",
+                gifLink: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHNlMHJxenprczN5d3lrc3IzYWkzbWk5OGJxMmZsZW55OXNxYzRpcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jwxy5MXUWDKlUtQatg/giphy.gif",
+                tags: ["Zaman Yönetimi", "Verimlilik", "Planlama"]
+            },
+            { 
+                title: "Yazılımcılar için İpuçları ve Püf Noktaları",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2c5ZDIzb3piNTAxZmdhMGp0NHNzMGxneGN0MnQ4cTB2aTBlOW5yYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Q3eheZfj64r5vZ2lJZ/giphy.gif",
+                tags: ["Yazılımcılar", "İpuçları", "Püf Noktaları"]
+            },
+            { 
+                title: "Motivasyonunuzu Koruyun: Yazılımda İlham Veren Hikâyeler",
+                gifLink: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExajI4NHRpNW42bXI1bm0xaTh5OTU3bzNoNmN5ZzNocWc3YTRseDlzMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/2nOWDXUevMgFQJ8O1l/giphy.gif",
+                tags: ["Motivasyon", "İlham", "Hikâyeler"]
+            },
+            { 
+                title: "Geleceğin Meslekleri: Yazılımda Hangi Alanlar Parlayacak?",
+                gifLink: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWN0YWJraXA5bDRhOGF5ZXhzMjZ0dWJlNm91NjN4eWx6YWxoNThlYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/hrxEWgJAc30qLaL3Xe/giphy.gif",
+                tags: ["Gelecek", "Yazılım", "Meslekler"]
+            }
+        ];
+
+        
+
+      const blogGrid = document.getElementById('blogGrid');
+
+blogPosts.forEach((post, index) => {
+    const blogNumber = index + 1;
+    const blogLink = `blog${blogNumber}.html`;
+
+    const card = document.createElement('a'); // <div> yerine <a>
+    card.className = 'blog-card';
+    card.href = blogLink;
+    card.style.textDecoration = 'none';
+    card.style.color = 'inherit';
+
+    card.innerHTML = `
+        <div class="gif-container">
+            <img src="${post.gifLink}" alt="${post.title}">
+        </div>
+        <div class="blog-content">
+            <h3 class="blog-title">${post.title}</h3>
+            <div class="blog-tags">
+                ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+        </div>
+    `;
+
+    card.addEventListener('mousemove', (e) => {
+        const glow = document.createElement('div');
+        glow.className = 'glow';
+        glow.style.left = `${e.clientX - card.getBoundingClientRect().left - 75}px`;
+        glow.style.top = `${e.clientY - card.getBoundingClientRect().top - 75}px`;
+        card.appendChild(glow);
+
+        setTimeout(() => glow.remove(), 500);
+    });
+
+    blogGrid.appendChild(card);
+});
+
+    </script>
+</body>
+</html>

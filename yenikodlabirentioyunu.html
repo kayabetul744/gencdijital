@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kod Öğrenme Oyunu</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: #34495e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #3498db;
+            margin-bottom: 30px;
+        }
+
+        .level-info {
+            text-align: right;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .problem-container {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .problem-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #bdc3c7;
+            padding: 15px;
+            background-color: #3b4a5a;
+            border-radius: 8px;
+        }
+
+        .code-area {
+            display: flex;
+            gap: 20px;
+        }
+
+        .code-blocks {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .code-workspace {
+            flex: 2;
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .code-block {
+            background-color: #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s ease;
+            font-family: 'Consolas', monospace;
+            color: white;
+        }
+
+        .code-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .drop-zone {
+            border: 2px dashed #7f8c8d;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+            animation: pulse-success 0.5s ease;
+        }
+
+        .drop-zone.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+            animation: shake 0.5s ease;
+        }
+
+        .hint-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .hint-button {
+            background: linear-gradient(to right, #e67e22, #d35400);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hint-text {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: rgba(231, 76, 60, 0.1);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .console {
+            margin-top: 20px;
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            min-height: 100px;
+        }
+
+        .console-line {
+            color: #2ecc71;
+            margin: 5px 0;
+        }
+
+        .console-line.error {
+            color: #e74c3c;
+        }
+
+        @keyframes pulse-success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            width: 0;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kod Öğrenme Oyunu</h1>
+        <div class="level-info">Seviye <span id="current-level">1</span>/10</div>
+
+        <div class="problem-container">
+            <div class="problem-text" id="problem-text"></div>
+
+            <div class="code-area">
+                <div class="code-blocks" id="code-blocks">
+                    <!-- Kod blokları buraya gelecek -->
+                </div>
+
+                <div class="code-workspace" id="code-workspace">
+                    <!-- Çalışma alanı buraya gelecek -->
+                </div>
+            </div>
+
+            <div class="console" id="console">
+                <!-- Konsol çıktıları -->
+            </div>
+
+            <div class="hint-container">
+                <button class="hint-button" onclick="showHint()">İpucu Al</button>
+                <div class="hint-text" id="hint-text"></div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                title: "Değişken Tanımlama",
+                description: "Bir sayı değişkeni tanımlayıp değer atayalım.",
+                blocks: [
+                    { text: "let", order: 1 },
+                    { text: "sayi", order: 2 },
+                    { text: "=", order: 3 },
+                    { text: "42", order: 4 },
+                    { text: ";", order: 5 }
+                ],
+                solution: ["let", "sayi", "=", "42", ";"],
+                hints: [
+                    "Değişken tanımlamak için 'let' anahtar kelimesini kullanırız.",
+                    "Değişkene bir isim vermeliyiz, örneğin 'sayi'.",
+                    "Değer atamak için '=' işaretini kullanırız.",
+                    "Şimdi bir sayı değeri girebiliriz.",
+                    "JavaScript'te her ifadeyi ';' ile bitiririz."
+                ]
+            },
+            {
+                title: "Koşullu İfadeler",
+                description: "Sayının pozitif olup olmadığını kontrol eden bir if bloğu yazalım.",
+                blocks: [
+                    { text: "if", order: 1 },
+                    { text: "(", order: 2 },
+                    { text: "sayi", order: 3 },
+                    { text: ">", order: 4 },
+                    { text: "0", order: 5 },
+                    { text: ")", order: 6 },
+                    { text: "{", order: 7 },
+                    { text: "}", order: 8 }
+                ],
+                solution: ["if", "(", "sayi", ">", "0", ")", "{", "}"],
+                hints: [
+                    "Koşul için 'if' anahtar kelimesini kullanırız.",
+                    "Koşulu parantez içine almalıyız.",
+                    "Kontrol edeceğimiz değişkeni yazalım.",
+                    "Karşılaştırma için '>' işaretini kullanabiliriz.",
+                    "Sıfırdan büyük olup olmadığını kontrol ediyoruz.",
+                    "Parantezi kapatmalıyız.",
+                    "Kod bloğunu '{' ile açarız.",
+                    "Kod bloğunu '}' ile kapatırız."
+                ]
+            },
+            {
+                title: "Döngüler",
+                description: "1'den 5'e kadar sayıları yazdıran bir for döngüsü yazalım.",
+                blocks: [
+                    { text: "for", order: 1 },
+                    { text: "(", order: 2 },
+                    { text: "let i = 1", order: 3 },
+                    { text: "i <= 5", order: 4 },
+                    { text: "i++", order: 5 },
+                    { text: ")", order: 6 },
+                    { text: "{", order: 7 },
+                    { text: "}", order: 8 }
+                ],
+                solution: ["for", "(", "let i = 1", "i <= 5", "i++", ")", "{", "}"],
+                hints: [
+                    "Döngü için 'for' anahtar kelimesini kullanırız.",
+                    "Başlangıç değerini tanımlarız: 'let i = 1'",
+                    "Döngü koşulunu belirleriz: 'i <= 5'",
+                    "Artış miktarını belirleriz: 'i++'",
+                    "Döngü bloğunu açıp kapatmayı unutmayalım."
+                ]
+            },
+            {
+                title: "Fonksiyon Tanımlama",
+                description: "İki sayıyı toplayan bir fonksiyon tanımlayalım.",
+                blocks: [
+                    { text: "function", order: 1 },
+                    { text: "topla", order: 2 },
+                    { text: "(", order: 3 },
+                    { text: "a, b", order: 4 },
+                    { text: ")", order: 5 },
+                    { text: "{", order: 6 },
+                    { text: "return a + b;", order: 7 },
+                    { text: "}", order: 8 }
+                ],
+                solution: ["function", "topla", "(", "a, b", ")", "{", "return a + b;", "}"],
+                hints: [
+                    "Fonksiyon tanımlamak için 'function' kelimesini kullanırız.",
+                    "Fonksiyona bir isim verelim: 'topla'",
+                    "Parametreleri parantez içinde belirtiriz.",
+                    "Fonksiyon gövdesini süslü parantezler içine yazarız.",
+                    "Sonucu 'return' ile döndürürüz."
+                ]
+            },
+            {
+                title: "Dizi İşlemleri",
+                description: "Bir dizi oluşturup eleman ekleyelim.",
+                blocks: [
+                    { text: "let", order: 1 },
+                    { text: "dizi", order: 2 },
+                    { text: "=", order: 3 },
+                    { text: "[]", order: 4 },
+                    { text: ";", order: 5 },
+                    { text: "dizi.push(5);", order: 6 }
+                ],
+                solution: ["let", "dizi", "=", "[]", ";", "dizi.push(5);"],
+                hints: [
+                    "Önce boş bir dizi oluşturalım.",
+                    "Diziye isim verelim: 'dizi'",
+                    "Boş dizi için '[]' kullanırız.",
+                    "push() metodu ile eleman ekleyebiliriz."
+                ]
+            },
+            {
+                title: "Nesne Oluşturma",
+                description: "Bir kişi nesnesi oluşturalım.",
+                blocks: [
+                    { text: "let", order: 1 },
+                    { text: "kisi", order: 2 },
+                    { text: "=", order: 3 },
+                    { text: "{", order: 4 },
+                    { text: "ad: 'Ali',", order: 5 },
+                    { text: "yas: 25", order: 6 },
+                    { text: "}", order: 7 },
+                    { text: ";", order: 8 }
+                ],
+                solution: ["let", "kisi", "=", "{", "ad: 'Ali',", "yas: 25", "}", ";"],
+                hints: [
+                    "Nesne oluşturmak için süslü parantez kullanırız.",
+                    "Nesneye bir isim verelim: 'kisi'",
+                    "Özellikleri 'anahtar: değer' şeklinde yazarız.",
+                    "Özellikler arasına virgül koymayı unutmayalım."
+                ]
+            },
+            {
+                title: "Metot Kullanımı",
+                description: "Bir nesneye metot ekleyelim.",
+                blocks: [
+                    { text: "let", order: 1 },
+                    { text: "hesap", order: 2 },
+                    { text: "=", order: 3 },
+                    { text: "{", order: 4 },
+                    { text: "bakiye: 100,", order: 5 },
+                    { text: "yatir(miktar) {", order: 6 },
+                    { text: "this.bakiye += miktar;", order: 7 },
+                    { text: "}", order: 8 },
+                    { text: "};", order: 9 }
+                ],
+                solution: ["let", "hesap", "=", "{", "bakiye: 100,", "yatir(miktar) {", "this.bakiye += miktar;", "}", "};"],
+                hints: [
+                    "Nesne içinde metot tanımlayabiliriz.",
+                    "Metot bir fonksiyon gibi parametre alabilir.",
+                    "this ile nesnenin özelliklerine erişebiliriz.",
+                    "Metot içinde işlemler yapabiliriz."
+                ]
+            },
+            {
+                title: "Try-Catch Kullanımı",
+                description: "Hata yakalama bloğu oluşturalım.",
+                blocks: [
+                    { text: "try", order: 1 },
+                    { text: "{", order: 2 },
+                    { text: "// kod", order: 3 },
+                    { text: "}", order: 4 },
+                    { text: "catch", order: 5 },
+                    { text: "(hata)", order: 6 },
+                    { text: "{", order: 7 },
+                    { text: "}", order: 8 }
+                ],
+                solution: ["try", "{", "// kod", "}", "catch", "(hata)", "{", "}"],
+                hints: [
+                    "Hata olabilecek kodu try bloğuna yazarız.",
+                    "catch bloğu hataları yakalar.",
+                    "catch parantezinde hata nesnesini alırız.",
+                    "Hata durumunda yapılacakları catch bloğuna yazarız."
+                ]
+            },
+            {
+                title: "Callback Fonksiyonlar",
+                description: "Bir callback fonksiyonu kullanalım.",
+                blocks: [
+                    { text: "function", order: 1 },
+                    { text: "islemYap", order: 2 },
+                    { text: "(", order: 3 },
+                    { text: "callback", order: 4 },
+                    { text: ")", order: 5 },
+                    { text: "{", order: 6 },
+                    { text: "callback();", order: 7 },
+                    { text: "}", order: 8 }
+                ],
+                solution: ["function", "islemYap", "(", "callback", ")", "{", "callback();", "}"],
+                hints: [
+                    "Callback bir fonksiyon parametresidir.",
+                    "Fonksiyon içinde başka bir fonksiyonu çağırabiliriz.",
+                    "Callback'i parametre olarak alırız.",
+                    "İçeride callback'i çağırırız."
+                ]
+            },
+            {
+                title: "Promise Kullanımı",
+                description: "Basit bir Promise oluşturalım.",
+                blocks: [
+                    { text: "new", order: 1 },
+                    { text: "Promise", order: 2 },
+                    { text: "((resolve, reject)", order: 3 },
+                    { text: "=>", order: 4 },
+                    { text: "{", order: 5 },
+                    { text: "resolve('OK');", order: 6 },
+                    { text: "});", order: 7 }
+                ],
+                solution: ["new", "Promise", "((resolve, reject)", "=>", "{", "resolve('OK');", "});"],
+                hints: [
+                    "Promise asenkron işlemler için kullanılır.",
+                    "new Promise ile yeni promise oluşturulur.",
+                    "Promise iki parametre alır: resolve ve reject",
+                    "İşlem başarılı ise resolve çağrılır."
+                ]
+            }
+        ];
+
+        let currentLevel = 0;
+        let currentHintIndex = 0;
+
+        function initializeLevel() {
+            document.getElementById('current-level').textContent = currentLevel + 1;
+            document.getElementById('problem-text').textContent = levels[currentLevel].description;
+
+            const blocksContainer = document.getElementById('code-blocks');
+            blocksContainer.innerHTML = '';
+
+            const shuffledBlocks = [...levels[currentLevel].blocks]
+                .sort(() => Math.random() - 0.5);
+
+            shuffledBlocks.forEach(block => {
+                const div = document.createElement('div');
+                div.className = 'code-block';
+                div.draggable = true;
+                div.textContent = block.text;
+                div.dataset.text = block.text;
+
+                div.addEventListener('dragstart', handleDragStart);
+                div.addEventListener('dragend', handleDragEnd);
+
+                blocksContainer.appendChild(div);
+            });
+
+            initializeDropZones();
+        }
+
+        function initializeDropZones() {
+            const workspace = document.getElementById('code-workspace');
+            workspace.innerHTML = '';
+
+            for(let i = 0; i < levels[currentLevel].solution.length; i++) {
+                const dropZone = document.createElement('div');
+                dropZone.className = 'drop-zone';
+                dropZone.dataset.position = i;
+                workspace.appendChild(dropZone);
+            }
+
+            workspace.addEventListener('dragover', handleDragOver);
+            workspace.addEventListener('drop', handleDrop);
+        }
+
+        function handleDragStart(e) {
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', e.target.dataset.text);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            if (e.target.classList.contains('drop-zone')) {
+                e.target.classList.add('hover');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropZone = e.target.closest('.drop-zone');
+            if (!dropZone || dropZone.children.length > 0) return;
+
+            const text = e.dataTransfer.getData('text/plain');
+            const draggedElement = document.querySelector('.dragging');
+
+            if (!draggedElement) return;
+
+            const position = parseInt(dropZone.dataset.position);
+            const expectedText = levels[currentLevel].solution[position];
+
+            dropZone.appendChild(draggedElement);
+
+            if (text === expectedText) {
+                dropZone.classList.add('correct');
+                showPositiveFeedback(position);
+                checkProgress();
+            } else {
+                dropZone.classList.add('incorrect');
+                showNegativeFeedback(position);
+                setTimeout(() => {
+                    dropZone.classList.remove('incorrect');
+                    document.getElementById('code-blocks').appendChild(draggedElement);
+                }, 1000);
+            }
+        }
+
+        function showPositiveFeedback(position) {
+            const nextPosition = position + 1;
+            const hintText = document.getElementById('hint-text');
+            hintText.style.display = 'block';
+            hintText.style.color = '#2ecc71';
+
+            if (nextPosition < levels[currentLevel].hints.length) {
+                hintText.textContent = `Harika! Şimdi: ${levels[currentLevel].hints[nextPosition]}`;
+            } else {
+                hintText.textContent = 'Mükemmel! Tüm adımları tamamladın!';
+            }
+        }
+
+        function showNegativeFeedback(position) {
+            const hintText = document.getElementById('hint-text');
+            hintText.style.display = 'block';
+            hintText.style.color = '#e74c3c';
+            hintText.textContent = levels[currentLevel].hints[position];
+        }
+
+        function showHint() {
+            const hintText = document.getElementById('hint-text');
+            if (hintText.style.display === 'none' || !hintText.style.display) {
+                hintText.style.display = 'block';
+                hintText.style.color = '#e67e22';
+                hintText.textContent = levels[currentLevel].hints[currentHintIndex];
+                currentHintIndex = (currentHintIndex + 1) % levels[currentLevel].hints.length;
+            } else {
+                hintText.style.display = 'none';
+            }
+        }
+
+        function checkProgress() {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let allCorrect = true;
+
+            dropZones.forEach((zone, index) => {
+                if (!zone.children.length ||
+                    zone.children[0].dataset.text !== levels[currentLevel].solution[index]) {
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                setTimeout(() => {
+                    if (currentLevel < levels.length - 1) {
+                        currentLevel++;
+                        currentHintIndex = 0;
+                        initializeLevel();
+                        updateProgress();
+                    } else {
+                        showCompletion();
+                    }
+                }, 1000);
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentLevel + 1) / levels.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
+        function showCompletion() {
+            const container = document.querySelector('.problem-container');
+            container.innerHTML = `
+                <div class="problem-text">
+                    <h2 style="text-align: center; color: #2ecc71;">
+                        Tebrikler! Tüm seviyeleri tamamladın!
+                    </h2>
+                    <p style="text-align: center;">
+                        Artık temel programlama kavramlarını öğrendin.
+                    </p>
+                    <button onclick="location.reload()" class="hint-button" style="margin-top: 20px;">
+                        Yeniden Başla
+                    </button>
+                </div>
+            `;
+        }
+
+        // Oyunu başlat
+        initializeLevel();
+        updateProgress();
+    </script>
+</body>
+</html>

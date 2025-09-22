@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Sözlük</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Bruno+Ace+SC:wght@400&family=Orbitron:wght@400;700;900&family=Quantico:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #8A2BE2; /* BlueViolet */
+            --primary-dark: #6A0DAD; /* Purple */
+            --secondary: #FF3CAC; /* Pink */
+            --secondary-dark: #D51A81;
+            --accent: #00FFFF; /* Cyan */
+            --accent-dark: #00E5E5;
+            --dark: #0F0524; /* Very dark purple */
+            --darker: #0A031A;
+            --highlight: #00FFFF;
+            --success: #00f59b;
+            --warning: #FFBD59;
+            --danger: #FF5757;
+            --info: #3DB4F2;
+            --text-light: #f5f5ff;
+            --text-muted: #C3C1D2;
+            --bg-gradient: linear-gradient(135deg, #240047 0%, #410063 100%);
+            --glow-color: rgba(138, 43, 226, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                repeating-linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0px, rgba(138, 43, 226, 0.1) 2px, transparent 2px, transparent 10px),
+                radial-gradient(rgba(138, 43, 226, 0.15) 2px, transparent 2px),
+                radial-gradient(rgba(0, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 20px 20px, 20px 20px, 30px 30px, 45px 45px;
+            background-position: 0 0, 0 0, 0 0, 15px 15px;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .sozluk-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(15, 5, 36, 0.95);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--glow-color);
+            border: 1px solid var(--primary);
+            position: relative;
+        }
+        
+        .sozluk-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid transparent;
+            border-radius: inherit;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--accent), transparent, var(--primary)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: borderAnimation 4s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes borderAnimation {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 130% 0%; }
+        }
+        
+        .sozluk-header {
+            background: var(--bg-gradient);
+            color: var(--accent);
+            padding: 20px;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid var(--primary);
+            position: relative;
+            font-size: 1.8rem;
+            font-family: 'Bruno Ace SC', sans-serif;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .sozluk-header::before {
+            content: ">";
+            position: absolute;
+            left: 20px;
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+        
+        .alphabet-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 15px;
+            background: rgba(23, 42, 69, 0.8);
+            border-bottom: 1px solid var(--primary);
+            gap: 5px;
+        }
+        
+        .letter {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 5, 36, 0.8);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .letter:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .letter.active {
+            background: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .content-container {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .terms-list {
+            width: 40%;
+            border-right: 1px solid var(--primary);
+            overflow-y: auto;
+            max-height: 500px;
+            background: rgba(10, 25, 47, 0.9);
+        }
+        
+        .definition-container {
+            width: 60%;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 500px;
+            background: rgba(15, 5, 36, 0.8);
+        }
+        
+        .term-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Quantico', sans-serif;
+        }
+        
+        .term-item:hover {
+            background: rgba(138, 43, 226, 0.2);
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .term-item.active {
+            background: rgba(138, 43, 226, 0.3);
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .term-header {
+            background: var(--bg-gradient);
+            color: var(--accent);
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            font-weight: bold;
+            border-bottom: 1px solid var(--primary);
+            font-family: 'Bruno Ace SC', sans-serif;
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+        
+        .definition-title {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed var(--primary);
+            padding-bottom: 10px;
+            font-family: 'Bruno Ace SC', sans-serif;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .definition-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            font-family: 'Quantico', sans-serif;
+        }
+        
+        .no-definition {
+            color: var(--danger);
+            font-style: italic;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.7;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--glow-color);
+        }
+        
+        .empty-state p {
+            font-family: 'Quantico', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        
+        .search-bar {
+            padding: 15px;
+            background: rgba(23, 42, 69, 0.9);
+            display: flex;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 20px;
+            background: rgba(15, 5, 36, 0.9);
+            border: 1px solid var(--primary);
+            border-radius: 25px;
+            color: var(--text-light);
+            outline: none;
+            font-family: 'Quantico', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .sozluk-header {
+                font-size: 1.4rem;
+                padding: 15px;
+            }
+            
+            .alphabet-bar {
+                padding: 10px;
+            }
+            
+            .letter {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+            
+            .content-container {
+                flex-direction: column;
+            }
+            
+            .terms-list, .definition-container {
+                width: 100%;
+                max-height: 250px;
+            }
+            
+            .terms-list {
+                border-right: none;
+                border-bottom: 1px solid var(--primary);
+            }
+            
+            .definition-container {
+                padding: 15px;
+            }
+            
+            .empty-state {
+                padding: 20px;
+            }
+            
+            .empty-state-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sozluk-container">
+        <div class="sozluk-header">
+            YAZILIM SÖZLÜĞÜ
+        </div>
+        <div class="alphabet-bar" id="alphabetBar">
+            <!-- Harfler JavaScript ile doldurulacak -->
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="Terim ara...">
+        </div>
+        <div class="content-container">
+            <div class="terms-list" id="termsList">
+                <!-- Terimler JavaScript ile doldurulacak -->
+            </div>
+            <div class="definition-container" id="definitionContainer">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <p>Bir terim seçin ve tanımını burada görüntüleyin.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elemanları
+        const alphabetBar = document.getElementById('alphabetBar');
+        const termsList = document.getElementById('termsList');
+        const definitionContainer = document.getElementById('definitionContainer');
+        const searchInput = document.getElementById('searchInput');
+
+        // Terim veritabanı
+        const siber_terimler = {
+    "ALGORİTMA": "Bir problemi çözmek için adım adım yazılan yol haritası.",
+    "API": "Farklı yazılım bileşenlerinin birbirleriyle iletişim kurmasını sağlayan arayüz.",
+    "ARAYÜZ": "Kullanıcı ile bilgisayar arasındaki etkileşimi sağlayan kısım.",
+    "ASYNC": "Kodun eş zamanlı olmayan şekilde çalışmasını sağlayan programlama yöntemi.",
+    "BAĞLAM": "Bir kod bloğunun çalıştığı ortam veya durum.",
+    "BETİK": "Özel amaçlar için yazılmış küçük program.",
+    "BİLGİSAYAR BİLİŞİMİ": "Bilgiyi işleme ve saklama bilimidir.",
+    "BUKLE": "Bir işlem veya döngünün tekrarını sağlayan yapı.",
+    "CLİENT": "Sunucudan hizmet alan yazılım veya cihaz.",
+    "CLASS": "Nesne yönelimli programlamada nesne şablonu.",
+    "CACHE": "Veri erişimini hızlandırmak için geçici saklama alanı.",
+    "COMPILER": "Kodları makine diline çeviren program.",
+    "DEBUG": "Koddaki hataları bulup düzeltme işlemi.",
+    "DÖNGÜ": "Kodun belirli kısmının tekrar çalışmasını sağlayan yapı.",
+    "DEPENDENCY": "Bir yazılımın çalışması için gerekli başka yazılım veya kütüphane.",
+    "DATABASE": "Bilgilerin düzenli şekilde saklandığı sistem.",
+    "ENKAPSÜLASYON": "Nesne yönelimli programlamada veriyi ve metotları kapsülleme.",
+    "EVENT": "Program içinde gerçekleşen ve tepki verilen olay.",
+    "EXCEPTION": "Program çalışırken oluşan hata durumu.",
+    "ENGINE": "Yazılımın temel çalıştırma ve işlem birimi.",
+    "FONKSİYON": "Belirli bir işi yapan, tekrar kullanılabilen kod parçaları.",
+    "FRAMEWORK": "Yazılım geliştirmeyi kolaylaştıran hazır yapı ve kütüphaneler bütünü.",
+    "FILE": "Bilgisayarda bilgi saklamanın temel birimi.",
+    "FETCH": "Veri almak için kullanılan web veya programlama fonksiyonu.",
+    "GİRDİ": "Bilgisayara verilen bilgi veya komut.",
+    "GİTHUB": "Kod paylaşımı ve sürüm kontrolü yapılan platform.",
+    "GITHUB ACTIONS": "Otomatik iş akışlarını yöneten GitHub özelliği.",
+    "GUI": "Grafiksel kullanıcı arayüzü.",
+    "HATA": "Programın çalışmasını engelleyen veya yanlış çalışmasına neden olan durum.",
+    "HASH": "Veriyi benzersiz şekilde temsil eden matematiksel fonksiyon.",
+    "HTTP": "Web üzerinde veri iletimi protokolü.",
+    "HEROKU": "Bulut tabanlı uygulama barındırma platformu.",
+    "IDE": "Kod yazmak ve geliştirmek için kullanılan yazılım ortamı.",
+    "INTERFACE": "Sınıflar veya bileşenler arasında iletişimi sağlayan yapı.",
+    "INHERITANCE": "Nesne yönelimli programlamada miras alma.",
+    "IO": "Input/Output işlemleri, yani girdi ve çıktı yönetimi.",
+    "JSON": "Veri değişimi için kullanılan hafif format.",
+    "JAVASCRIPT": "Web geliştirmede yaygın kullanılan programlama dili.",
+    "JQUERY": "JavaScript kütüphanesi, kod yazmayı kolaylaştırır.",
+    "JOIN": "Veritabanında tabloları birleştirme işlemi.",
+    "KOD": "Bilgisayarın anlayacağı komutlar bütünü.",
+    "KLASÖR": "Dosyaları düzenlemek için kullanılan yapı.",
+    "KÜTÜPHANE": "Hazır fonksiyon ve modüllerin topluluğu.",
+    "KEY": "Şifreleme veya veri erişimi için kullanılan anahtar.",
+    "LİSTE": "Birden fazla bilgiyi sırayla saklamak için kullanılan yapı.",
+    "LOOP": "Döngü yapısı, belirli işlemi tekrarlar.",
+    "LOG": "Programın çalışmasıyla ilgili kayıtlar.",
+    "LICENSE": "Yazılımın kullanım haklarını belirten belge.",
+    "MODÜL": "Belirli bir işlevi yerine getiren bağımsız kod parçası.",
+    "METHOD": "Sınıf içindeki fonksiyonlara verilen ad.",
+    "MAVEN": "Java projeleri için kullanılan yapılandırma ve bağımlılık aracı.",
+    "MODEL": "Veriyi temsil eden veya işlem yapan yapı.",
+    "NESNE": "Bir varlığı temsil eden ve özellikleri ile davranışları saklayan yapı.",
+    "NODEJS": "Sunucu taraflı JavaScript çalıştırma ortamı.",
+    "NULL": "Hiçbir değeri temsil eden özel değer.",
+    "NPM": "Node.js paket yöneticisi.",
+    "OBJEKTİF C": "Apple tarafından kullanılan programlama dili.",
+    "OVERLOAD": "Fonksiyonların aynı isimle farklı parametre alması durumu.",
+    "OPTIONAL": "Değer verilmesi zorunlu olmayan değişken veya parametre.",
+    "OS": "İşletim sistemi.",
+    "PROGRAM": "Birden fazla kod parçalarının birleşip çalışan yazılım haline gelmesi.",
+    "PORT": "Ağ üzerinde veri alışveriş noktası.",
+    "PARAMETRE": "Fonksiyon veya metodlara verilen ek bilgi.",
+    "PATCH": "Yazılım hatalarını veya güvenlik açıklarını düzeltme güncellemesi.",
+    "RUNTIME": "Programın çalıştığı zaman.",
+    "REPOSITORY": "Kodların saklandığı yer.",
+    "REFLECTION": "Programın kendi yapısını incelemesine olanak veren özellik.",
+    "RECURSION": "Fonksiyonun kendini çağırması durumu.",
+    "SINIF": "Benzer nesneleri tanımlamak için kullanılan şablon.",
+    "STACK": "Veri yapısı, son giren ilk çıkar mantığıyla çalışır.",
+    "STRING": "Karakter dizilerini saklayan veri türü.",
+    "SERVER": "Bilgi ve hizmetleri diğer bilgisayarlara sağlayan makine.",
+    "TEMPLATE": "Kod veya yapı şablonu.",
+    "THREAD": "Programın eş zamanlı çalışan parçası.",
+    "TEST": "Kodun doğru çalışıp çalışmadığını kontrol etme.",
+    "TOKEN": "Kimlik doğrulamada kullanılan bilgi parçası.",
+    "UYGULAMA": "Belirli bir amaca hizmet eden yazılım türü.",
+    "URL": "Web adresini gösteren yapı.",
+    "USER": "Sistemi kullanan kişi veya varlık.",
+    "UPDATE": "Yazılımın geliştirilmiş veya hataları düzeltilmiş yeni sürümü.",
+    "VERİ": "Bilgisayarın işlediği bilgi.",
+    "VERSION": "Yazılımın sürüm numarası.",
+    "VARIABLE": "Programda değer saklayan değişken.",
+    "VIRTUAL MACHINE": "Fiziksel olmayan sanal bilgisayar ortamı.",
+    "YEDEKLEME": "Veri kaybını önlemek için kopya oluşturma.",
+    "YAPI": "Programlama dili ile oluşturulan veri ve kod düzeni.",
+    "YAZILIM": "Bilgisayarda belirli işleri yapan programlar bütünüdür.",
+    "YÖNLENDİRME": "Verinin bir noktadan diğerine aktarılması.",
+    "ZIP": "Dosyaları sıkıştırmak için kullanılan format.",
+    "ZEUGMA": "Kodda tekrar eden yapıların kısaltılması yöntemi.",
+    "ZERO DAY": "Henüz keşfedilmemiş ve açığı bulunan yazılım güvenlik hatası.",
+    "ZOOM": "Uzak görüşme ve işbirliği yazılımı."
+        };
+
+        // Alfabe oluşturma
+        const alphabet = 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ';
+        for (let i = 0; i < alphabet.length; i++) {
+            const letter = document.createElement('div');
+            letter.className = 'letter';
+            letter.textContent = alphabet[i];
+            letter.addEventListener('click', () => {
+                showTermsStartingWith(alphabet[i]);
+                
+                // Aktif harfi belirginleştir
+                document.querySelectorAll('.letter').forEach(l => l.classList.remove('active'));
+                letter.classList.add('active');
+            });
+            alphabetBar.appendChild(letter);
+        }
+
+        // Terimleri alfabetik olarak sırala
+        const sortedTerms = Object.keys(siber_terimler).sort();
+
+        // Tanımı göster
+        function showDefinition(term) {
+            const definition = siber_terimler[term] || "Bu terim için tanım bulunamadı.";
+            
+            // Aktif terimi belirginleştir
+            document.querySelectorAll('.term-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent === term) {
+                    item.classList.add('active');
+                }
+            });
+            
+            definitionContainer.innerHTML = `
+                <h2 class="definition-title">${term}</h2>
+                <p class="definition-text">${definition}</p>
+            `;
+        }
+
+        // Belirli harfle başlayan terimleri göster
+        function showTermsStartingWith(letter) {
+            const termsWithLetter = sortedTerms.filter(term => 
+                term.charAt(0) === letter.toUpperCase()
+            );
+            
+            renderTermsList(termsWithLetter, letter);
+        }
+
+        // Terimler listesini render et
+        function renderTermsList(terms, currentLetter = null) {
+            termsList.innerHTML = '';
+            
+            if (currentLetter) {
+                const letterHeader = document.createElement('div');
+                letterHeader.className = 'term-header';
+                letterHeader.textContent = `"${currentLetter}" ile başlayan terimler`;
+                termsList.appendChild(letterHeader);
+            }
+            
+            if (terms.length === 0) {
+                const emptyItem = document.createElement('div');
+                emptyItem.className = 'term-item';
+                emptyItem.textContent = 'Sonuç bulunamadı';
+                termsList.appendChild(emptyItem);
+                return;
+            }
+            
+            terms.forEach(term => {
+                const termItem = document.createElement('div');
+                termItem.className = 'term-item';
+                termItem.textContent = term;
+                termItem.addEventListener('click', () => {
+                    showDefinition(term);
+                });
+                termsList.appendChild(termItem);
+            });
+        }
+
+        // Arama fonksiyonu
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.trim().toUpperCase();
+            
+            if (searchTerm === '') {
+                // Boş arama - tüm terimleri göster
+                renderTermsList(sortedTerms, null);
+                return;
+            }
+            
+            const filteredTerms = sortedTerms.filter(term => 
+                term.includes(searchTerm)
+            );
+            
+            renderTermsList(filteredTerms, null);
+        });
+
+        // Başlangıçta tüm terimleri göster
+        renderTermsList(sortedTerms);
+        
+        // İlk harfi seçilmiş olarak göster
+        if (alphabet.length > 0) {
+            const firstLetter = alphabet[0];
+            document.querySelector('.letter').classList.add('active');
+            showTermsStartingWith(firstLetter);
+        }
+    </script>
+</body>
+</html>
